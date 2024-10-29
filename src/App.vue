@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import HeaderComponent from '../../../../../frontend-klantV2/frontend-klantV2/src/components/headerComponents.vue'; // Import HeaderComponent
-import Category from '../../../../../frontend-klantV2/frontend-klantV2/src/components/CategoryComponents.vue';
+import HeaderComponent from './components/headerComponents.vue';
+import Category from './components/CategoryComponents.vue';
 
 export default {
   components: {
