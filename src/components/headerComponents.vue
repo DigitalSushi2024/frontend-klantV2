@@ -38,7 +38,7 @@ export default {
   text-align: center;
   color: white;
   height: 5.5em;
-  width: 100%;
+  width: 25em;
   border-radius: 0px 0px 35px 35px;
   box-shadow: 0px 1px 1px rgba(3, 7, 18, 0.02),
   0px 5px 4px rgba(3, 7, 18, 0.03),
