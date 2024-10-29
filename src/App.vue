@@ -53,7 +53,7 @@ export default {
   padding: 0;
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: black;
+  background-color: #121212;
   color: white;
   min-height: 100vh;
   width: 100%;
@@ -66,5 +66,12 @@ export default {
 
 .dish-category {
   margin-bottom: 20px;
+  background-color: #222;
+  color: #ddd;
+  padding: 15px;
+  border-radius: 8px;
+}
+.dish-category:hover {
+  background-color: #333;
 }
 </style>
