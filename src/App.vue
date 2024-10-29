@@ -1,47 +1,70 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div class="app-container">
+    <!-- Use the HeaderComponent here -->
+    <HeaderComponent />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <!-- Call the Category component -->
+    <Category @category-selected="handleCategorySelected" />
+
+    <div class="dishes">
+      <!-- Show dishes based on selected category -->
+      <div v-if="selectedCategory === 'Sushi'" class="dish-category">
+        <!-- Sushi items here -->
+      </div>
+      <div v-if="selectedCategory === 'Grill'" class="dish-category">
+        <!-- Grill items here -->
+      </div>
+      <div v-if="selectedCategory === 'Side Dishes'" class="dish-category">
+        <!-- Side dishes items here -->
+      </div>
+      <div v-if="selectedCategory === 'Drinks'" class="dish-category">
+        <!-- Drinks items here -->
+      </div>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  </div>
 </template>
 
+<script>
+import HeaderComponent from '../../../../../frontend-klantV2/frontend-klantV2/src/components/headerComponents.vue'; // Import HeaderComponent
+import Category from '../../../../../frontend-klantV2/frontend-klantV2/src/components/CategoryComponents.vue';
+
+export default {
+  components: {
+    HeaderComponent, // Register HeaderComponent
+    Category,
+  },
+  data() {
+    return {
+      selectedCategory: null,
+    };
+  },
+  methods: {
+    handleCategorySelected(category) {
+      this.selectedCategory = category;
+      console.log("Selected category:", category);
+    },
+  },
+};
+</script>
+ 
 <style scoped>
-header {
-  line-height: 1.5;
+/* Your existing styles */
+.app-container {
+  padding: 0;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: black;
+  color: white;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.dishes {
+  padding: 20px;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.dish-category {
+  margin-bottom: 20px;
 }
 </style>
