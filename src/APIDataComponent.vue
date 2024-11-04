@@ -30,7 +30,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await fetch("http://localhost:7110/api"); // Vervang 'your-endpoint' door het juiste endpoint
+        const response = await fetch("http://localhost:7110/api/data"); // Vervang 'your-endpoint' door het juiste endpoint
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }

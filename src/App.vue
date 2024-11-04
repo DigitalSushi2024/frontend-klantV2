@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <APIDataComponent></APIDataComponent>
+    <APIProductComponent></APIProductComponent>
     <header-component></header-component>
     <!-- Categorie Selectie Component -->
 
@@ -26,6 +27,7 @@ import CategoryComponents from '@/components/CategoryComponents.vue';
 import SushiListComponent from '@/components/SushiListComponent.vue';
 import HeaderComponent from "@/components/headerComponents.vue";
 import APIDataComponent from "@/APIDataComponent.vue";
+import APIProductComponent from "@/Service/APIProductComponent.vue";
 
 
 export default {
@@ -34,6 +36,7 @@ export default {
     CategoryComponents,
     SushiListComponent,
     APIDataComponent,
+    APIProductComponent,
   },
   data() {
     return {
