@@ -11,6 +11,9 @@
 
 <script>
 import SushiItemComponent from './SushiItemComponent.vue';
+import TunaNig from '../assets/images/TunaNigiri.png'
+import SalmonNig from '../assets/images/salmonNigiri.png'
+import KappaMaki from '../assets/images/KappaMaki.png'
 
 export default {
   components: {
@@ -22,15 +25,15 @@ export default {
         {
           name: "Nigiri",
           items: [
-            { name: "Tuna nigiri", image: "path-to-image", price: 2 },
-            { name: "Salmon nigiri", image: "path-to-image", price: 3 },
+            { name: "Tuna nigiri", image: "TunaNig", price: 2 },
+            { name: "Salmon nigiri", image: "SalmonNig", price: 3 },
           ],
         },
         {
           name: "Maki",
           items: [
-            { name: "Kappa maki", image: "path-to-image", price: 3 },
-            { name: "Sake maki", image: "path-to-image", price: 4 },
+            { name: "Kappa maki", image: "KappaMaki", price: 3 },
+            { name: "Sake maki", image: "", price: 4 },
           ],
         },
       ],
@@ -41,14 +44,20 @@ export default {
 
 <style scoped>
 .sushi-list {
-  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr; /* Eén kolom per categorie */
+  gap: 20px; /* Ruimte tussen categorieën */
+  padding: 20px;
 }
+
 .sushi-category h2 {
-  margin-top: 20px;
+  margin-top: 10px;
   color: white;
 }
+
 .sushi-items {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
 }
 </style>

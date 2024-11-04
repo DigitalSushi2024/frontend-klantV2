@@ -1,37 +1,39 @@
 <template>
   <div class="app-container">
-    <!-- Use the HeaderComponent here -->
-    <HeaderComponent />
+    <APIDataComponent></APIDataComponent>
+    <header-component></header-component>
+    <!-- Categorie Selectie Component -->
 
-    <!-- Call the Category component -->
-    <Category @category-selected="handleCategorySelected" />
+    <CategoryComponents @category-selected="handleCategorySelection" />
 
-    <div class="dishes">
-      <!-- Show dishes based on selected category -->
-      <div v-if="selectedCategory === 'Sushi'" class="dish-category">
-        <!-- Sushi items here -->
-      </div>
-      <div v-if="selectedCategory === 'Grill'" class="dish-category">
-        <!-- Grill items here -->
-      </div>
-      <div v-if="selectedCategory === 'Side Dishes'" class="dish-category">
-        <!-- Side dishes items here -->
-      </div>
-      <div v-if="selectedCategory === 'Drinks'" class="dish-category">
-        <!-- Drinks items here -->
-      </div>
+    <!-- Weergave van Item Lijst op Basis van Geselecteerde Categorie -->
+    <div v-if="selectedCategory === 'Sushi'">
+      <SushiListComponent />
+    </div>
+    <div v-else-if="selectedCategory === 'Grill'">
+      <GrillListComponent />
+    </div>
+    <div v-else-if="selectedCategory === 'Side Dishes'">
+      <SideDishesListComponent />
+    </div>
+    <div v-else-if="selectedCategory === 'Drinks'">
+      <DrinksListComponent />
     </div>
   </div>
 </template>
-
 <script>
-import HeaderComponent from './components/headerComponents.vue';
-import Category from './components/CategoryComponents.vue';
+import CategoryComponents from '@/components/CategoryComponents.vue';
+import SushiListComponent from '@/components/SushiListComponent.vue';
+import HeaderComponent from "@/components/headerComponents.vue";
+import APIDataComponent from "@/APIDataComponent.vue";
+
 
 export default {
   components: {
-    HeaderComponent, // Register HeaderComponent
-    Category,
+    HeaderComponent,
+    CategoryComponents,
+    SushiListComponent,
+    APIDataComponent,
   },
   data() {
     return {
@@ -39,9 +41,8 @@ export default {
     };
   },
   methods: {
-    handleCategorySelected(category) {
+    handleCategorySelection(category) {
       this.selectedCategory = category;
-      console.log("Selected category:", category);
     },
   },
 };
@@ -49,29 +50,28 @@ export default {
  
 <style scoped>
 /* Your existing styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
 .app-container {
   padding: 0;
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #121212;
   color: white;
-  min-height: 100vh;
+  min-height: 100vh; /* Zorgt ervoor dat de container minimaal de hoogte van het scherm vult */
   width: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
-.dishes {
-  padding: 20px;
-}
-
-.dish-category {
-  margin-bottom: 20px;
-  background-color: #222;
-  color: #ddd;
-  padding: 15px;
-  border-radius: 8px;
-}
-.dish-category:hover {
-  background-color: #333;
-}
 </style>

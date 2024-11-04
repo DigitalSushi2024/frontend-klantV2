@@ -34,7 +34,7 @@ export default {
 
 .app-header {
   background-color: #E74C3C;
-  position: absolute;
+  position: relative; /* Gebruik relative in plaats van absolute */
   text-align: center;
   color: white;
   height: 5.5em;
@@ -46,13 +46,14 @@ export default {
   0px 20px 15px rgba(3, 7, 18, 0.06),
   0px 32px 24px rgba(3, 7, 18, 0.08);
   z-index: 2;
-
 }
+
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-grow: 1;
+  width: 100%;
+  padding: 0 1em;
 }
 
 .table {
@@ -61,13 +62,13 @@ export default {
   font-size: 16px;
   color: black;
   text-align: center;
-  flex-grow: 1;
-  margin: 0;
   margin-top: 1.5em;
 }
+
 .cart {
   position: relative;
 }
+
 .cart-count {
   position: absolute;
   top: -5px;
@@ -77,14 +78,15 @@ export default {
   padding: 5px;
   color: white;
 }
+
 .header-image {
   width: 100%;
   height: auto;
-  margin-top: 3em;
+  margin: 0; /* Verwijder eventuele ongewenste marges */
   position: relative;
 }
 
-.restaurantName{
+.restaurantName {
   color: #CBA43F;
   font-family: "Cinzel Decorative", serif;
   font-size: 43px;
@@ -92,7 +94,7 @@ export default {
   z-index: 3;
   position: relative;
   text-align: center;
-  margin-top: -2.2em;
+  margin-top: 1em; /* Pas deze waarde aan indien nodig */
   box-shadow: 0px 1px 1px rgba(3, 7, 18, 0.02),
   0px 5px 4px rgba(3, 7, 18, 0.03),
   0px 12px 9px rgba(3, 7, 18, 0.05),
