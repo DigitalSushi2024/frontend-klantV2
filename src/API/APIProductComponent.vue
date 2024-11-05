@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import productService from '@/services/productService';
+import productService from '@/Service/ProductService.js';
 
 export default {
   data() {
@@ -23,7 +23,6 @@ export default {
     };
   },
   mounted() {
-    // Haal alle producten op bij het laden van de component
     this.fetchAllProducts();
   },
   methods: {
@@ -38,11 +37,10 @@ export default {
     },
 
     async fetchProductById(productId) {
-      // Voorbeeld van hoe je een specifiek product kunt ophalen
       try {
         this.loading = true;
         const product = await productService.getProductById(productId);
-        this.products = [product]; // Plaatst het ene product in de lijst
+        this.products = [product];
       } catch (err) {
         this.error = `Fout bij het ophalen van product met ID ${productId}.`;
       } finally {
@@ -51,7 +49,6 @@ export default {
     },
 
     async fetchProductsByLocation(locationId) {
-      // Voorbeeld van hoe je producten op locatie kunt ophalen
       try {
         this.loading = true;
         this.products = await productService.getProductsByLocation(locationId);

@@ -1,52 +1,89 @@
 <template>
   <div class="app-container">
-    <APIDataComponent></APIDataComponent>
-    <APIProductComponent></APIProductComponent>
     <header-component></header-component>
-    <!-- Categorie Selectie Component -->
-
+    <cart-icon :cartItems="cartItems" @remove-from-cart="removeFromCart" />
     <CategoryComponents @category-selected="handleCategorySelection" />
 
-    <!-- Weergave van Item Lijst op Basis van Geselecteerde Categorie -->
+    <!-- Display product lists based on the selected category -->
     <div v-if="selectedCategory === 'Sushi'">
-      <SushiListComponent />
+      <SushiComponent @add-to-cart="addToCart" />
     </div>
     <div v-else-if="selectedCategory === 'Grill'">
-      <GrillListComponent />
+      <GrilledComponent @add-to-cart="addToCart" />
     </div>
     <div v-else-if="selectedCategory === 'Side Dishes'">
-      <SideDishesListComponent />
+      <DishComponent @add-to-cart="addToCart" />
     </div>
     <div v-else-if="selectedCategory === 'Drinks'">
-      <DrinksListComponent />
+      <DrinkComponent @add-to-cart="addToCart" />
     </div>
+
+    <!-- Cart button and cart component -->
   </div>
 </template>
 <script>
 import CategoryComponents from '@/components/CategoryComponents.vue';
-import SushiListComponent from '@/components/SushiListComponent.vue';
+import SushiComponent from '@/components/SushiComponent.vue';
+import DrinkComponent from "@/components/DrinkComponent.vue";
+import DishComponent from "@/components/DishComponent.vue";
+import GrilledComponent from "@/components/GrilledComponent.vue";
 import HeaderComponent from "@/components/headerComponents.vue";
-import APIDataComponent from "@/APIDataComponent.vue";
-import APIProductComponent from "@/Service/APIProductComponent.vue";
+import Cart from "@/components/Cart.vue";
+import CartIcon from "@/components/CartIcon.vue";
+
 
 
 export default {
   components: {
+    CartIcon,
+    Cart,
     HeaderComponent,
     CategoryComponents,
-    SushiListComponent,
-    APIDataComponent,
-    APIProductComponent,
+    SushiComponent,
+    DrinkComponent,
+    GrilledComponent,
+    DishComponent,
   },
   data() {
     return {
       selectedCategory: null,
+      cartItems: [], // Array to store cart items
+      isCartVisible: false,
     };
   },
   methods: {
     handleCategorySelection(category) {
       this.selectedCategory = category;
     },
+    addToCart(product) {
+      // Check if the item already exists in the cart
+      const existingItem = this.cartItems.find(item => item.productName === product.productName);
+
+      if (existingItem) {
+        // Increase quantity if item with the same name already exists
+        existingItem.quantity++;
+      } else {
+        // Add new item to cart with quantity 1
+        this.cartItems.push({ ...product, quantity: 1 });
+      }
+    },
+    removeFromCart(productName) {
+      console.log("Removing item:", productName); // Debugging line
+      const itemIndex = this.cartItems.findIndex(item => item.productName === productName);
+
+      if (itemIndex !== -1) {
+        const item = this.cartItems[itemIndex];
+
+        if (item.quantity > 1) {
+          item.quantity--;
+        } else {
+          this.cartItems.splice(itemIndex, 1);
+        }
+      }
+    },
+    toggleCart() {
+      this.isCartVisible = !this.isCartVisible;
+    }
   },
 };
 </script>
