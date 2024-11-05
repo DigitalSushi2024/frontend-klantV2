@@ -1,10 +1,12 @@
 <template>
   <div class="app-container">
-    <header-component></header-component>
-    <cart-icon :cartItems="cartItems" @remove-from-cart="removeFromCart" />
-    <CategoryComponents @category-selected="handleCategorySelection" />
+    <header-component
+        :cart-items="cartItems"
+        @remove-from-cart="removeFromCart"
+        @navigate-to-order="goToOrderPage"
+    />
 
-    <!-- Display product lists based on the selected category -->
+    <CategoryComponents @category-selected="handleCategorySelection" />
     <div v-if="selectedCategory === 'Sushi'">
       <SushiComponent @add-to-cart="addToCart" />
     </div>
@@ -17,8 +19,6 @@
     <div v-else-if="selectedCategory === 'Drinks'">
       <DrinkComponent @add-to-cart="addToCart" />
     </div>
-
-    <!-- Cart button and cart component -->
   </div>
 </template>
 <script>
@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       selectedCategory: null,
-      cartItems: [], // Array to store cart items
+      cartItems: [],
       isCartVisible: false,
     };
   },
@@ -56,19 +56,15 @@ export default {
       this.selectedCategory = category;
     },
     addToCart(product) {
-      // Check if the item already exists in the cart
       const existingItem = this.cartItems.find(item => item.productName === product.productName);
 
       if (existingItem) {
-        // Increase quantity if item with the same name already exists
         existingItem.quantity++;
       } else {
-        // Add new item to cart with quantity 1
         this.cartItems.push({ ...product, quantity: 1 });
       }
     },
     removeFromCart(productName) {
-      console.log("Removing item:", productName); // Debugging line
       const itemIndex = this.cartItems.findIndex(item => item.productName === productName);
 
       if (itemIndex !== -1) {
@@ -81,8 +77,8 @@ export default {
         }
       }
     },
-    toggleCart() {
-      this.isCartVisible = !this.isCartVisible;
+    goToOrderPage() {
+      this.$router.push('/order');
     }
   },
 };

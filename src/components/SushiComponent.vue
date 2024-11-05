@@ -17,7 +17,7 @@ export default {
   },
   data() {
     return {
-      products: [], // Only sushi products will be stored here
+      products: [],
       loading: true,
       error: null
     };
@@ -29,7 +29,7 @@ export default {
     async fetchSushiProducts() {
       try {
         const allProducts = await productService.getAllProducts();
-        this.products = allProducts.filter(product => product.category === 1); // Assuming 1 is the ID for Sushi
+        this.products = allProducts.filter(product => product.category === 1);
       } catch (err) {
         this.error = 'Fout bij het ophalen van de sushi producten.';
         console.error("Error fetching sushi products:", err);

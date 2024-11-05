@@ -17,7 +17,7 @@ export default {
   },
   data() {
     return {
-      products: [], // Only grilled items will be stored here
+      products: [],
       loading: true,
       error: null
     };

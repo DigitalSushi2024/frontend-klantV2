@@ -8,7 +8,7 @@
         <img :src="`${product.productImage}`" :alt="product.productName" class="product-image" />
         <h3>{{ product.productName }}</h3>
         <p>€{{ product.price.toFixed(2) }}</p>
-        <button @click="addToCart(product)">Add to Cart</button>
+        <button class="add-to-cart-btn" @click="addToCart(product)">Add to Cart</button>
       </div>
     </div>
   </div>
@@ -17,11 +17,11 @@
 <script>
 /**
  * @typedef {Object} Product
- * @property {number} productId - The unique ID of the product
- * @property {string} productName - The name of the product
- * @property {string} productImage - The image path of the product
+ * @property {number} productId
+ * @property {string} productName
+ * @property {string} productImage
  * @property {number} category
- * @property {number} price - The price of the product
+ * @property {number} price
  */
   export default {
   props: {
@@ -35,7 +35,7 @@
     products: {
       type: Array,
       required: true,
-      default: () => [] // Optional default value to satisfy type checking
+      default: () => []
     },
     loading: {
       type: Boolean,
@@ -49,7 +49,6 @@
   methods: {
 
     addToCart(product) {
-      // Emit an event to the parent with the product to add
       this.$emit('add-to-cart', product);
     }
   }
@@ -78,6 +77,20 @@
   height: 100px;
   object-fit: cover;
   border-radius: 10px;
+}
+.add-to-cart-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #218838;
 }
 
 .error {

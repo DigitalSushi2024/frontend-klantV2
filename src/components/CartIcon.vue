@@ -48,7 +48,7 @@ export default {
       this.$emit("remove-from-cart", productName);
     },
     navigateToOrderPage() {
-      this.$router.push("/order"); // Assuming you have a route named 'order'
+      this.$router.push("/order");
     }
   }
 };

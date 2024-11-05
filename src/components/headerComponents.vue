@@ -4,14 +4,32 @@
     <div class="header-content">
       <p class="table">Tabel 14</p>
 
-      <div class="cart">
+      <!-- Cart Icon with Dynamic Count -->
+      <div class="cart" @click="toggleCart">
         <i class="cart-icon">🛒</i>
-        <span class="cart-count">10</span>
+        <span class="cart-count">{{ cartItemCount }}</span>
       </div>
     </div>
   </header>
+
   <img :src="headerImage" alt="wok-all-day" class="header-image" />
-  <p class="restaurantName">wok-all-day</p>
+  <p class="restaurantName">WOK-ALL-DAY</p>
+
+  <!-- Cart Modal -->
+  <div v-if="isCartVisible" class="cart-modal">
+    <h3>Your Cart</h3>
+    <div v-if="cartItems.length === 0" class="empty-cart">Your cart is empty.</div>
+    <div v-else class="cart-items">
+      <div v-for="item in cartItems" :key="item.productId" class="cart-item">
+        <span>{{ item.productName }} - Quantity: {{ item.quantity }}</span>
+        <span>Price: €{{ (item.price * item.quantity).toFixed(2) }}</span>
+        <button class="remove-btn" @click="$emit('remove-from-cart', item.productName)">Remove</button>
+      </div>
+      <p class="cart-total">Total: €{{ totalPrice.toFixed(2) }}</p>
+      <button class="order-btn" @click="goToOrderPage">Go to Order Page</button>
+    </div>
+    <button class="close-btn" @click="toggleCart">Close Cart</button>
+  </div>
 </template>
 
 <script>
@@ -19,9 +37,33 @@ import headerImage from '@/assets/images/Header-Image.png';
 
 export default {
   name: 'HeaderComponent',
+  props: {
+    cartItems: {
+      type: Array,
+      default: () => []
+    }
+  },
+  emits: ['remove-from-cart', 'navigate-to-order'],
   data() {
     return {
-      headerImage
+      headerImage,
+      isCartVisible: false
+    }
+  },
+  computed: {
+    cartItemCount() {
+      return this.cartItems.reduce((count, item) => count + item.quantity, 0);
+    },
+    totalPrice() {
+      return this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    }
+  },
+  methods: {
+    toggleCart() {
+      this.isCartVisible = !this.isCartVisible;
+    },
+    goToOrderPage() {
+      this.$emit('navigate-to-order');
     }
   }
 }
@@ -34,7 +76,7 @@ export default {
 
 .app-header {
   background-color: #E74C3C;
-  position: relative; /* Gebruik relative in plaats van absolute */
+  position: relative;
   text-align: center;
   color: white;
   height: 5.5em;
@@ -56,6 +98,26 @@ export default {
   padding: 0 1em;
 }
 
+.cart {
+  position: relative;
+  cursor: pointer;
+}
+
+.cart-icon {
+  font-size: 24px;
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: black;
+  border-radius: 50%;
+  padding: 5px;
+  color: white;
+  font-size: 12px;
+}
+
 .table {
   font-family: "Roboto", sans-serif;
   font-weight: 500;
@@ -65,24 +127,9 @@ export default {
   margin-top: 1.5em;
 }
 
-.cart {
-  position: relative;
-}
-
-.cart-count {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background-color: black;
-  border-radius: 50%;
-  padding: 5px;
-  color: white;
-}
-
 .header-image {
   width: 100%;
   height: auto;
-  margin: 0; /* Verwijder eventuele ongewenste marges */
   position: relative;
 }
 
@@ -94,11 +141,60 @@ export default {
   z-index: 3;
   position: relative;
   text-align: center;
-  margin-top: 1em; /* Pas deze waarde aan indien nodig */
+  margin-top: 1em;
   box-shadow: 0px 1px 1px rgba(3, 7, 18, 0.02),
   0px 5px 4px rgba(3, 7, 18, 0.03),
   0px 12px 9px rgba(3, 7, 18, 0.05),
   0px 20px 15px rgba(3, 7, 18, 0.06),
   0px 32px 24px rgba(3, 7, 18, 0.08);
+}
+
+.cart-modal {
+  position: fixed;
+  top: 70px;
+  background-color: #b22222;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 250px;
+  z-index: 100;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.remove-btn {
+  background-color: transparent;
+  border: none;
+  color: #ffc107;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.cart-total {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.order-btn {
+  background-color: #ffc107;
+  color: black;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.close-btn {
+  background-color: transparent;
+  color: #ffffff;
+  border: none;
+  margin-top: 10px;
+  cursor: pointer;
 }
 </style>

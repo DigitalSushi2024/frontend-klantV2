@@ -17,7 +17,7 @@ export default {
   },
   data() {
     return {
-      products: [], // Only side dish products will be stored here
+      products: [],
       loading: true,
       error: null
     };
@@ -29,7 +29,7 @@ export default {
     async fetchSideDishes() {
       try {
         const allProducts = await productService.getAllProducts();
-        this.products = allProducts.filter(product => product.category === 4); // Assuming 4 is the ID for Side Dishes
+        this.products = allProducts.filter(product => product.category === 4);
       } catch (err) {
         this.error = 'Fout bij het ophalen van de side dishes.';
         console.error("Error fetching side dishes:", err);

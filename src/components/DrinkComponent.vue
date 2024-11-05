@@ -17,7 +17,7 @@ export default {
   },
   data() {
     return {
-      products: [], // Only drinks will be stored here
+      products: [],
       loading: true,
       error: null
     };
@@ -29,7 +29,7 @@ export default {
     async fetchDrinks() {
       try {
         const allProducts = await productService.getAllProducts();
-        this.products = allProducts.filter(product => product.category === 2); // Assuming 2 is the ID for Drinks
+        this.products = allProducts.filter(product => product.category === 2);
       } catch (err) {
         this.error = 'Fout bij het ophalen van de drankjes.';
         console.error("Error fetching drinks:", err);
