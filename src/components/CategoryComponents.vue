@@ -41,6 +41,7 @@ export default {
     overflow-y: hidden;
     overflow-x: auto;
 
+
   }
 
   .category-btn {
@@ -79,7 +80,7 @@ export default {
   .categories {
     display: flex;
     justify-content: space-evenly;
-    margin: 2em 0em;
+    margin: 4em 0em;
   }
 
   .category-btn {
