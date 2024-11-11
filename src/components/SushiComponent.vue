@@ -64,8 +64,8 @@ export default {
 }
 
 .product-image {
-  width: 100px;
-  height: 100px;
+  width: 20%;
+  height: auto;
   object-fit: cover;
   border-radius: 10px;
 }
