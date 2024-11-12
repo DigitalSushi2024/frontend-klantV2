@@ -5,9 +5,11 @@
       <p class="table">Tabel 14</p>
 
       <!-- Cart Icon with Dynamic Count -->
+      <div class="eclipse">
       <div class="cart" @click="toggleCart">
-        <i class="cart-icon">🛒</i>
+        <img :src="shoppingCart" alt="cart-icon" class="cart-icon">🛒</img>
         <span class="cart-count">{{ cartItemCount }}</span>
+      </div>
       </div>
     </div>
   </header>
@@ -34,6 +36,7 @@
 
 <script>
 import headerImage from '@/assets/images/Header-Image.png';
+import shoppingCart from '@/assets/images/shopping-cart.png';
 
 export default {
   name: 'HeaderComponent',
@@ -142,6 +145,16 @@ export default {
   position: relative;
   text-align: center;
   margin-top: -2.5em;
+}
+
+.eclipse{
+  background: #E74C3C;
+  width: 4.5em;
+  height: 4.5em;
+  border-radius: 50px;
+  margin-top: 5em;
+  position: absolute;
+  margin-left: 22em;
 }
 
 .cart-modal {
