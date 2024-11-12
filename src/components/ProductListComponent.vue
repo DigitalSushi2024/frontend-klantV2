@@ -56,27 +56,34 @@
 </script>
 
 <style scoped>
+
 .product-list {
   text-align: center;
   color: white;
 }
 
 .product-item {
-  background-color: #222222;
+  margin-top: 2em;
+  background-color: #302D2F;
   display: inline-block;
-  width: 150px;
-  margin: 10px;
+  width: 9em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
   text-align: center;
+  border-radius: 21px;
+  font-family: "Roboto", sans-serif;
+  padding-top: -1em;
 }
 .product-item:hover {
   background-color: #181818;
 }
 
 .product-image {
-  width: 100px;
+  width: 95%;
   height: auto;
   object-fit: cover;
   border-radius: 10px;
+  margin-top: -3em;
 }
 .add-to-cart-btn {
   background-color: #28a745;

@@ -1,4 +1,5 @@
 <template>
+  <p class="category-title">Categories</p>
   <div class="categories">
     <button class="category-btn" v-for="category in categories" :key="category.id" @click="selectCategory(category)">
       <img :src="category.image" :alt="category.name" class="category-image" />
@@ -40,7 +41,7 @@ export default {
     margin: 3em 0em;
     overflow-y: hidden;
     overflow-x: auto;
-
+    font-family: "Roboto", sans-serif;
 
   }
 
@@ -54,10 +55,10 @@ export default {
     align-items: center;
     gap: 1em;
     transition: background-color 0.3s ease;
-    width: 12em;
     height: 4em;
     margin-left: 1em;
     font-size: 13px;
+    white-space: nowrap;
   }
 
   .category-btn:hover {
@@ -80,7 +81,17 @@ export default {
   .categories {
     display: flex;
     justify-content: space-evenly;
-    margin: 4em 0em;
+    margin: 3.5em 1em;
+    font-family: "Roboto", sans-serif;
+  }
+
+  .category-title{
+    position: absolute;
+    margin-left: 2em;
+    margin-top: 0.8em;
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
   }
 
   .category-btn {
@@ -93,9 +104,9 @@ export default {
     align-items: center;
     gap: 1em;
     transition: background-color 0.3s ease;
-    width: 12em;
-    height: 4em;
+    height: 3em;
     margin-left: 1em;
+    white-space: nowrap;
   }
 
   .category-image {

@@ -6,6 +6,8 @@
         @navigate-to-order="goToOrderPage"
     />
 
+    <div class="black-container">
+
     <CategoryComponents @category-selected="handleCategorySelection" />
     <div v-if="selectedCategory === 'Sushi'">
       <SushiComponent @add-to-cart="addToCart" />
@@ -19,6 +21,7 @@
     <div v-else-if="selectedCategory === 'Drinks'">
       <DrinkComponent @add-to-cart="addToCart" />
     </div>
+  </div>
   </div>
 </template>
 <script>
@@ -83,6 +86,7 @@ export default {
   },
 };
 </script>
+
  
 <style scoped>
 /* Your existing styles */
@@ -108,6 +112,15 @@ html, body {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+}
+
+.black-container{
+  background-color: #010101;
+  width: 100%;
+  height: 100%;
+  margin-top: 0.8em;
+  z-index: 2;
+  border-radius: 35px 35px 0px 0px;
 }
 
 </style>
