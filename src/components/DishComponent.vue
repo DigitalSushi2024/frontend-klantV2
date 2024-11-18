@@ -29,7 +29,7 @@ export default {
     async fetchSideDishes() {
       try {
         const allProducts = await productService.getAllProducts();
-        this.products = allProducts.filter(product => product.category === 4);
+        this.products = allProducts.filter(product => product.category === 3);
       } catch (err) {
         this.error = 'Fout bij het ophalen van de side dishes.';
         console.error("Error fetching side dishes:", err);

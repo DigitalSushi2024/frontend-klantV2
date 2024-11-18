@@ -1,65 +1,47 @@
 <template>
   <div class="app-container">
+    <!-- Toon een andere header op basis van de huidige route -->
     <header-component
+        v-if="!isOrderPage"
         :cart-items="cartItems"
         @remove-from-cart="removeFromCart"
         @navigate-to-order="goToOrderPage"
     />
+    <order-header v-else />
 
-    <div class="black-container">
-
-    <CategoryComponents @category-selected="handleCategorySelection" />
-    <div v-if="selectedCategory === 'Sushi'">
-      <SushiComponent @add-to-cart="addToCart" />
-    </div>
-    <div v-else-if="selectedCategory === 'Grill'">
-      <GrilledComponent @add-to-cart="addToCart" />
-    </div>
-    <div v-else-if="selectedCategory === 'Side Dishes'">
-      <DishComponent @add-to-cart="addToCart" />
-    </div>
-    <div v-else-if="selectedCategory === 'Drinks'">
-      <DrinkComponent @add-to-cart="addToCart" />
-    </div>
-  </div>
+    <!-- Dynamische inhoud via router-view -->
+    <router-view
+        :cart-items="cartItems"
+        @add-to-cart="addToCart"
+        @remove-from-cart="removeFromCart"
+    />
   </div>
 </template>
+
 <script>
-import CategoryComponents from '@/components/CategoryComponents.vue';
-import SushiComponent from '@/components/SushiComponent.vue';
-import DrinkComponent from "@/components/DrinkComponent.vue";
-import DishComponent from "@/components/DishComponent.vue";
-import GrilledComponent from "@/components/GrilledComponent.vue";
 import HeaderComponent from "@/components/headerComponents.vue";
-import Cart from "@/components/Cart.vue";
-import CartIcon from "@/components/CartIcon.vue";
-
-
+import OrderHeader from "@/components/OrderHeader.vue";
 
 export default {
   components: {
-    CartIcon,
-    Cart,
     HeaderComponent,
-    CategoryComponents,
-    SushiComponent,
-    DrinkComponent,
-    GrilledComponent,
-    DishComponent,
+    OrderHeader,
   },
   data() {
     return {
-      selectedCategory: null,
-      cartItems: [],
-      isCartVisible: false,
+      cartItems: [], // Globale cart-items
     };
   },
-  methods: {
-    handleCategorySelection(category) {
-      this.selectedCategory = category;
+  computed: {
+    isOrderPage() {
+      return this.$route.name === "Order"; // Controleer of de huidige route 'Order' is
     },
+  },
+  methods: {
     addToCart(product) {
-      const existingItem = this.cartItems.find(item => item.productName === product.productName);
+      const existingItem = this.cartItems.find(
+          (item) => item.productName === product.productName
+      );
 
       if (existingItem) {
         existingItem.quantity++;
@@ -68,26 +50,25 @@ export default {
       }
     },
     removeFromCart(productName) {
-      const itemIndex = this.cartItems.findIndex(item => item.productName === productName);
+      const index = this.cartItems.findIndex(
+          (item) => item.productName === productName
+      );
 
-      if (itemIndex !== -1) {
-        const item = this.cartItems[itemIndex];
-
-        if (item.quantity > 1) {
-          item.quantity--;
+      if (index !== -1) {
+        if (this.cartItems[index].quantity > 1) {
+          this.cartItems[index].quantity--;
         } else {
-          this.cartItems.splice(itemIndex, 1);
+          this.cartItems.splice(index, 1);
         }
       }
     },
     goToOrderPage() {
-      this.$router.push('/order');
-    }
+      this.$router.push({ name: "Order" }); // Navigeren naar Order pagina
+    },
   },
 };
 </script>
 
- 
 <style scoped>
 /* Your existing styles */
 
@@ -114,13 +95,6 @@ html, body {
   flex-direction: column;
 }
 
-.black-container{
-  background-color: #010101;
-  width: 100%;
-  height: 100%;
-  margin-top: 0.8em;
-  z-index: 2;
-  border-radius: 35px 35px 0px 0px;
-}
+
 
 </style>

@@ -29,7 +29,7 @@ export default {
     async fetchDrinks() {
       try {
         const allProducts = await productService.getAllProducts();
-        this.products = allProducts.filter(product => product.category === 2);
+        this.products = allProducts.filter(product => product.category === 4);
       } catch (err) {
         this.error = 'Fout bij het ophalen van de drankjes.';
         console.error("Error fetching drinks:", err);

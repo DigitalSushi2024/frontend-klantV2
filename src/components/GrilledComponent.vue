@@ -29,7 +29,7 @@ export default {
     async fetchGrilledItems() {
       try {
         const allProducts = await productService.getAllProducts();
-        this.products = allProducts.filter(product => product.category === 3);
+        this.products = allProducts.filter(product => product.category === 2);
       } catch (err) {
         this.error = 'Fout bij het ophalen van de grill items.';
         console.error("Error fetching grilled items:", err);

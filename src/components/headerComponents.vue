@@ -2,10 +2,10 @@
 <template>
   <header class="app-header">
     <div class="header-content">
-      <p class="table">Tabel 14</p>
+      <p class="table">Table 14</p>
 
       <!-- Cart Icon with Dynamic Count -->
-      <div class="cart" @click="toggleCart">
+      <div class="cart" @click="goToOrderPage">
         <i class="cart-icon">🛒</i>
         <span class="cart-count">{{ cartItemCount }}</span>
       </div>
@@ -14,22 +14,6 @@
 
   <img :src="headerImage" alt="wok-all-day" class="header-image" />
   <p class="restaurantName">WOK-ALL-DAY</p>
-
-  <!-- Cart Modal -->
-  <div v-if="isCartVisible" class="cart-modal">
-    <h3>Your Cart</h3>
-    <div v-if="cartItems.length === 0" class="empty-cart">Your cart is empty.</div>
-    <div v-else class="cart-items">
-      <div v-for="item in cartItems" :key="item.productId" class="cart-item">
-        <span>{{ item.productName }} - Quantity: {{ item.quantity }}</span>
-        <span>Price: €{{ (item.price * item.quantity).toFixed(2) }}</span>
-        <button class="remove-btn" @click="$emit('remove-from-cart', item.productName)">Remove</button>
-      </div>
-      <p class="cart-total">Total: €{{ totalPrice.toFixed(2) }}</p>
-      <button class="order-btn" @click="goToOrderPage">Go to Order Page</button>
-    </div>
-    <button class="close-btn" @click="toggleCart">Close Cart</button>
-  </div>
 </template>
 
 <script>
@@ -43,32 +27,23 @@ export default {
       default: () => []
     }
   },
-  emits: ['remove-from-cart', 'navigate-to-order'],
-  data() {
-    return {
-      headerImage,
-      isCartVisible: false
-    }
-  },
   computed: {
     cartItemCount() {
       return this.cartItems.reduce((count, item) => count + item.quantity, 0);
-    },
-    totalPrice() {
-      return this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
     }
   },
   methods: {
-    toggleCart() {
-      this.isCartVisible = !this.isCartVisible;
-    },
     goToOrderPage() {
-      this.$emit('navigate-to-order');
+      this.$router.push({ name: 'Order' }); // Navigeren naar de OrderPage
     }
+  },
+  data() {
+    return {
+      headerImage
+    };
   }
-}
+};
 </script>
-
 <style scoped>
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
