@@ -4,6 +4,10 @@
     <div class="header-content">
       <p class="table">Table 14</p>
 
+      <div class="language-selecter">
+        <img :src="netherlandsIcon" alt="Dutch" class="netherlandsIcon" />
+        <img :src="englishIcon" alt="English" class="englishIcon" />
+      </div>
       <!-- Cart Icon with Dynamic Count -->
       <div class="cart" @click="goToOrderPage">
         <i class="cart-icon">🛒</i>
@@ -18,6 +22,8 @@
 
 <script>
 import headerImage from '@/assets/images/Header-Image.png';
+import netherlandsIcon from '@/assets/images/netherlands.png';
+import englishIcon from '@/assets/images/english.png';
 
 export default {
   name: 'HeaderComponent',
@@ -39,7 +45,9 @@ export default {
   },
   data() {
     return {
-      headerImage
+      headerImage,
+      netherlandsIcon,
+      englishIcon
     };
   }
 };
@@ -54,7 +62,7 @@ export default {
   position: relative;
   text-align: center;
   color: white;
-  height: 5.5em;
+  height: 6em;
   width: 100%;
   border-radius: 0px 0px 35px 35px;
   box-shadow: 0px 1px 1px rgba(3, 7, 18, 0.02),
@@ -72,6 +80,31 @@ export default {
   width: 100%;
   padding: 0 1em;
 }
+
+.language-selecter{
+  position: absolute;
+  top: 0.2em;
+  left: 1.2em;
+}
+
+.netherlandsIcon {
+  width: 1.8em;
+  height: auto;
+  border: 1px solid #373534;
+  border-radius: 100%;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.englishIcon {
+  margin-left: 0.2em;
+  width: 1.8em;
+  height: auto;
+  border: 1px solid #373534;
+  border-radius: 100%;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+
 
 .cart {
   position: relative;
@@ -99,7 +132,7 @@ export default {
   font-size: 16px;
   color: black;
   text-align: center;
-  margin-top: 1.5em;
+  margin-top: 2em;
 }
 
 .header-image {
