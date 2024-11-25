@@ -62,7 +62,7 @@ export default {
     },
     // Method to return translated category name
     getTranslatedCategoryName(category) {
-      const categoryKey = category.name.toLowerCase().replace(/\s/g, ''); // Normalize the category name to lowercase and remove spaces
+      const categoryKey = category.name.toLowerCase().replace(/\s/g, '');
       return this.translations[this.currentLanguage].categories[categoryKey] || category.name;
     }
   },
