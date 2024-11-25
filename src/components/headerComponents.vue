@@ -1,14 +1,23 @@
-
 <template>
   <header class="app-header">
     <div class="header-content">
-      <p class="table">Table 14</p>
+      <p class="table">{{ tableText }}</p>
 
       <div class="language-selecter">
-        <img :src="netherlandsIcon" alt="Dutch" class="netherlandsIcon" />
-        <img :src="englishIcon" alt="English" class="englishIcon" />
+        <img
+            :src="netherlandsIcon"
+            alt="Dutch"
+            class="netherlandsIcon"
+            @click="switchLanguage('nl')"
+        />
+        <img
+            :src="englishIcon"
+            alt="English"
+            class="englishIcon"
+            @click="switchLanguage('en')"
+        />
       </div>
-      <!-- Cart Icon with Dynamic Count -->
+
       <div class="cart" @click="goToOrderPage">
         <i class="cart-icon">🛒</i>
         <span class="cart-count">{{ cartItemCount }}</span>
@@ -21,37 +30,60 @@
 </template>
 
 <script>
-import headerImage from '@/assets/images/Header-Image.png';
-import netherlandsIcon from '@/assets/images/netherlands.png';
-import englishIcon from '@/assets/images/english.png';
+import headerImage from "@/assets/images/Header-Image.png";
+import netherlandsIcon from "@/assets/images/netherlands.png";
+import englishIcon from "@/assets/images/english.png";
 
 export default {
-  name: 'HeaderComponent',
+  name: "HeaderComponent",
   props: {
     cartItems: {
       type: Array,
-      default: () => []
-    }
-  },
-  computed: {
-    cartItemCount() {
-      return this.cartItems.reduce((count, item) => count + item.quantity, 0);
-    }
-  },
-  methods: {
-    goToOrderPage() {
-      this.$router.push({ name: 'Order' }); // Navigeren naar de OrderPage
-    }
+      default: () => [],
+    },
   },
   data() {
     return {
       headerImage,
       netherlandsIcon,
-      englishIcon
+      englishIcon,
+      currentLanguage: "en", // Default language
+      translations: {
+        en: {
+          tableText: "Table 14",
+        },
+        nl: {
+          tableText: "Tafel 14",
+        },
+      },
     };
-  }
+  },
+  computed: {
+    cartItemCount() {
+      return this.cartItems.reduce((count, item) => count + item.quantity, 0);
+    },
+    tableText() {
+      return this.translations[this.currentLanguage].tableText;
+    },
+  },
+  methods: {
+    switchLanguage(language) {
+      this.currentLanguage = language;
+      localStorage.setItem("preferredLanguage", language);
+    },
+    goToOrderPage() {
+      this.$router.push({ name: "Order" });
+    },
+  },
+  created() {
+    const savedLanguage = localStorage.getItem("preferredLanguage");
+    if (savedLanguage) {
+      this.currentLanguage = savedLanguage;
+    }
+  },
 };
 </script>
+
 <style scoped>
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
