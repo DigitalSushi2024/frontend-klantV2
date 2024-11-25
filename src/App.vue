@@ -32,6 +32,7 @@
         :current-language="currentLanguage"
         @add-to-cart="addToCart"
         @remove-from-cart="removeFromCart"
+        @language-changed="switchLanguage"
     />
   </div>
 </template>
@@ -91,8 +92,12 @@ export default {
     switchLanguage(language) {
       this.currentLanguage = language;
       localStorage.setItem("preferredLanguage", language);
+
+      // Force a page reload to apply the new language
+      window.location.reload();
     },
   },
+
   created() {
     const savedLanguage = localStorage.getItem("preferredLanguage");
     if (savedLanguage) {

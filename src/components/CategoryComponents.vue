@@ -24,10 +24,10 @@ export default {
     return {
       currentLanguage: "en", // Default language
       categories: [
-        {id: 1, name: "Sushi", image: sushiImage},
-        {id: 2, name: "Grill", image: grillImage},
-        {id: 3, name: "Side Dishes", image: dishImage},
-        {id: 4, name: "Drinks", image: drinkImage}
+        { id: 1, name: "Sushi", image: sushiImage },
+        { id: 2, name: "Grill", image: grillImage },
+        { id: 3, name: "Side Dishes", image: dishImage },
+        { id: 4, name: "Drinks", image: drinkImage }
       ],
       translations: {
         en: {
@@ -55,15 +55,19 @@ export default {
     selectCategory(category) {
       this.$emit('category-selected', category.name);
     },
-    // Switch language and store preference
     switchLanguage(language) {
-      this.currentLanguage = language;
-      localStorage.setItem("preferredLanguage", language);
+      this.currentLanguage = language;  // Updates the language dynamically
+      localStorage.setItem("preferredLanguage", language);  // Save language preference
     },
-    // Method to return translated category name
     getTranslatedCategoryName(category) {
       const categoryKey = category.name.toLowerCase().replace(/\s/g, '');
       return this.translations[this.currentLanguage].categories[categoryKey] || category.name;
+    }
+  },
+  watch: {
+    // Watch for changes in the currentLanguage prop
+    currentLanguage(newLanguage) {
+      // When language changes, the UI will automatically re-render due to Vue's reactivity
     }
   },
   created() {
