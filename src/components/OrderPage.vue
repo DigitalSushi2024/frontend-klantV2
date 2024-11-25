@@ -96,7 +96,7 @@ export default {
 
         alert("Order placed successfully!");
         console.log("Response:", response);
-        this.cartItems = null;
+        //this.cartItems = null;
 
       } catch (error) {
         console.error("Error placing order:", error);
