@@ -9,13 +9,17 @@
     <!-- Order items list -->
     <div class="order-items">
       <div v-for="item in cartItems" :key="item.productId" class="order-item">
-        <img :src="`/${item.productImage}`" :alt="item.productName" class="item-image" />
+        <img :src="`${item.productImage}`" :alt="item.productName" class="item-image" />
         <div class="item-details">
           <h3>{{ item.productName }}</h3>
-          <p>Quantity: {{ item.quantity }}</p>
-          <p>Price: €{{ (item.price * item.quantity).toFixed(2) }}</p>
+          <p>Price: €{{ item.price.toFixed(2) }}</p>
+          <div class="quantity-controls">
+            <button class="quantity-button" @click="decreaseQuantity(item.productId)">−</button>
+            <span class="quantity">{{ item.quantity }}</span>
+            <button class="quantity-button" @click="increaseQuantity(item.productId)">+</button>
+            <button class="remove"  @click="removeFromCart(item.productId)">Remove</button>
+          </div>
         </div>
-        <button class="remove-button" @click="removeFromOrder(item.productId)">Remove</button>
       </div>
     </div>
 
@@ -28,12 +32,18 @@
 </template>
 
 <script>
+import orderService from "@/Service/OrderService.js";
+
 export default {
   name: "OrderPage",
   props: {
     cartItems: {
       type: Array,
       default: () => [],
+    },
+    sessionId: {
+      type: Number,
+      required: true,
     },
   },
   computed: {
@@ -45,12 +55,58 @@ export default {
     },
   },
   methods: {
-    removeFromOrder(productId) {
-      this.$emit("remove-from-cart", productId); // Emit event to remove item from cart
+    increaseQuantity(productId) {
+      const item = this.cartItems.find((item) => item.productId === productId);
+      if (item) {
+        item.quantity++;
+      }
     },
-    checkout() {
-      alert("Proceeding to checkout!");
+    decreaseQuantity(productId) {
+      const index = this.cartItems.findIndex(
+          (item) => item.productId === productId
+      );
+      if (index !== -1) {
+        if (this.cartItems[index].quantity > 1) {
+          this.cartItems[index].quantity--;
+        } else {
+          this.cartItems.splice(index, 1); // Verwijder het item als de hoeveelheid 1 is
+        }
+      }
     },
+    removeFromCart(productId){
+      const index = this.cartItems.findIndex(
+          (item) => item.productId === productId
+      );
+      if (index !== -1) {
+        if (this.cartItems[index].quantity > 1) {
+          this.cartItems.splice(index, 1);
+        }
+      }
+
+    },
+    async checkout() {
+      try {
+        // Maak een lijst van OrderItemsDTO
+        const orderItemsDto = this.cartItems.map(item => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          unitPrice: item.price,
+        }));
+        const response = await orderService.checkout(1,orderItemsDto);
+
+        alert("Order placed successfully!");
+        console.log("Response:", response);
+        this.cartItems = null;
+
+      } catch (error) {
+        console.error("Error placing order:", error);
+        if (error.response && error.response.data) {
+          alert(`Error: ${error.response.data.title || "Failed to place order"}`);
+          console.log("Backend errors:", error.response.data.errors);
+        }
+      }
+    },
+
     goBack() {
       this.$router.push("/"); // Navigeer terug naar de homepagina
     },
@@ -137,17 +193,29 @@ h1 {
   color: #bbb;
 }
 
-.remove-button {
-  background-color: #e74c3c;
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantity {
+  font-size: 1.2em;
+  color: white;
+}
+
+.quantity-button {
+  background-color: #333;
   color: white;
   border: none;
   padding: 5px 10px;
-  border-radius: 3px;
+  font-size: 1.2em;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.remove-button:hover {
-  background-color: #c0392b;
+.quantity-button:hover {
+  background-color: #555;
 }
 
 /* Samenvatting van de bestelling */
@@ -175,5 +243,8 @@ h2 {
 
 .checkout-button:hover {
   background-color: #219150;
+}
+.remove{
+  background-color: #e74c3c;
 }
 </style>
