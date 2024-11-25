@@ -1,9 +1,14 @@
 <template>
-  <p class="category-title">Categories</p>
+  <p class="category-title">{{ translations[currentLanguage].categoriesTitle }}</p>
   <div class="categories">
-    <button class="category-btn" v-for="category in categories" :key="category.id" @click="selectCategory(category)">
+    <button
+        class="category-btn"
+        v-for="category in categories"
+        :key="category.id"
+        @click="selectCategory(category)"
+    >
       <img :src="category.image" :alt="category.name" class="category-image" />
-      {{ category.name }}
+      {{ getTranslatedCategoryName(category) }} <!-- Bind the computed translated name -->
     </button>
   </div>
 </template>
@@ -17,19 +22,56 @@ import drinkImage from '@/assets/images/poinsettia.png';
 export default {
   data() {
     return {
+      currentLanguage: "en", // Default language
       categories: [
         {id: 1, name: "Sushi", image: sushiImage},
         {id: 2, name: "Grill", image: grillImage},
         {id: 3, name: "Side Dishes", image: dishImage},
         {id: 4, name: "Drinks", image: drinkImage}
       ],
+      translations: {
+        en: {
+          categoriesTitle: "Categories",
+          categories: {
+            sushi: "Sushi",
+            grill: "Grill",
+            sideDishes: "Side Dishes",
+            drinks: "Drinks"
+          }
+        },
+        nl: {
+          categoriesTitle: "Categorieën",
+          categories: {
+            sushi: "Sushi",
+            grill: "Grill",
+            sideDishes: "Bijgerechten",
+            drinks: "Dranken"
+          }
+        }
+      }
     };
   },
   methods: {
     selectCategory(category) {
       this.$emit('category-selected', category.name);
     },
+    // Switch language and store preference
+    switchLanguage(language) {
+      this.currentLanguage = language;
+      localStorage.setItem("preferredLanguage", language);
+    },
+    // Method to return translated category name
+    getTranslatedCategoryName(category) {
+      const categoryKey = category.name.toLowerCase().replace(/\s/g, ''); // Normalize the category name to lowercase and remove spaces
+      return this.translations[this.currentLanguage].categories[categoryKey] || category.name;
+    }
   },
+  created() {
+    const savedLanguage = localStorage.getItem("preferredLanguage");
+    if (savedLanguage) {
+      this.currentLanguage = savedLanguage;
+    }
+  }
 };
 </script>
 
@@ -42,7 +84,6 @@ export default {
     overflow-y: hidden;
     overflow-x: auto;
     font-family: "Roboto", sans-serif;
-
   }
 
   .category-btn {
@@ -76,7 +117,6 @@ export default {
   }
 }
 
-
 @media only screen and (max-width: 4000px) {
   .categories {
     display: flex;
@@ -85,7 +125,7 @@ export default {
     font-family: "Roboto", sans-serif;
   }
 
-  .category-title{
+  .category-title {
     position: absolute;
     margin-left: 2em;
     margin-top: 0.8em;
@@ -116,5 +156,4 @@ export default {
     filter: invert(100%) sepia(2%) saturate(0%) hue-rotate(33deg) brightness(110%) contrast(1100%);
   }
 }
-
 </style>
