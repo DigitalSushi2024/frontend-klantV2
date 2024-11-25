@@ -26,5 +26,9 @@ export default {
     async getPendingOrdersByLocation(locationId) {
         const response = await axios.get(`${API_ORDER_URL}/pending/${locationId}`);
         return response.data;
+    },
+    async checkout(sessionId,orderData) {
+        const response = await axios.post(`${API_ORDER_URL}/place-order/${sessionId}`, orderData);
+        return response.data;
     }
 };
