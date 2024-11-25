@@ -85,7 +85,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap');
 
@@ -113,7 +112,7 @@ export default {
   padding: 0 1em;
 }
 
-.language-selecter{
+.language-selecter {
   position: absolute;
   top: 0.2em;
   left: 1.2em;
@@ -135,8 +134,6 @@ export default {
   border-radius: 100%;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
-
-
 
 .cart {
   position: relative;
@@ -182,54 +179,5 @@ export default {
   position: relative;
   text-align: center;
   margin-top: -2.5em;
-}
-
-.cart-modal {
-  position: fixed;
-  top: 70px;
-  background-color: #b22222;
-  color: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 250px;
-  z-index: 100;
-}
-
-.cart-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.remove-btn {
-  background-color: transparent;
-  border: none;
-  color: #ffc107;
-  cursor: pointer;
-  font-size: 0.9em;
-}
-
-.cart-total {
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.order-btn {
-  background-color: #ffc107;
-  color: black;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.close-btn {
-  background-color: transparent;
-  color: #ffffff;
-  border: none;
-  margin-top: 10px;
-  cursor: pointer;
 }
 </style>

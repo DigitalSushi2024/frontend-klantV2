@@ -1,17 +1,20 @@
 <template>
   <div class="app-container">
-    <!-- Toon een andere header op basis van de huidige route -->
+    <!-- Show header based on current route -->
     <header-component
         v-if="!isOrderPage"
         :cart-items="cartItems"
+        :current-language="currentLanguage"
         @remove-from-cart="removeFromCart"
         @navigate-to-order="goToOrderPage"
+        @switch-language="switchLanguage"
     />
-    <order-header v-else />
+    <order-header v-else :current-language="currentLanguage" />
 
-    <!-- Dynamische inhoud via router-view -->
+    <!-- Dynamically rendered content based on route -->
     <router-view
         :cart-items="cartItems"
+        :current-language="currentLanguage"
         @add-to-cart="addToCart"
         @remove-from-cart="removeFromCart"
     />
@@ -29,12 +32,13 @@ export default {
   },
   data() {
     return {
-      cartItems: [], // Globale cart-items
+      cartItems: [], // Global cart items
+      currentLanguage: "en", // Default language is English
     };
   },
   computed: {
     isOrderPage() {
-      return this.$route.name === "Order"; // Controleer of de huidige route 'Order' is
+      return this.$route.name === "Order"; // Check if current route is 'Order'
     },
   },
   methods: {
@@ -63,8 +67,18 @@ export default {
       }
     },
     goToOrderPage() {
-      this.$router.push({ name: "Order" }); // Navigeren naar Order pagina
+      this.$router.push({ name: "Order" }); // Navigate to Order page
     },
+    switchLanguage(language) {
+      this.currentLanguage = language;
+      localStorage.setItem("preferredLanguage", language);
+    },
+  },
+  created() {
+    const savedLanguage = localStorage.getItem("preferredLanguage");
+    if (savedLanguage) {
+      this.currentLanguage = savedLanguage;
+    }
   },
 };
 </script>
@@ -82,19 +96,17 @@ html, body {
   height: 100%;
   width: 100%;
 }
+
 .app-container {
   padding: 0;
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #121212;
   color: white;
-  min-height: 100vh; /* Zorgt ervoor dat de container minimaal de hoogte van het scherm vult */
+  min-height: 100vh; /* Ensures container fills at least the screen height */
   width: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
-
-
-
 </style>
