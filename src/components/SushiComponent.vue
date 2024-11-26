@@ -1,15 +1,8 @@
 <template>
   <div>
-    <!-- Sushi category titles -->
     <div v-for="subcategory in subcategory" :key="subcategory.id">
-      <h2>{{ subcategory.name }}</h2>
-      <div class="product-list">
-        <!-- Loop through filtered products for each subcategory -->
-        <div v-for="product in filteredProducts[subcategory.id]" :key="product.id" class="product-item">
-          <!-- Use the SushiItem component to display individual sushi items -->
-          <SushiItem :item="product" />
-        </div>
-      </div>
+      <!-- Use the SubcategoryComponent to display products for each subcategory -->
+      <SubcategoryComponent :subcategory="subcategory" />
     </div>
 
     <!-- Loading and Error Messages -->
@@ -19,55 +12,31 @@
 </template>
 
 <script>
-import SushiItem from "@/components/SushiItemComponent.vue";
-import productService from '@/Service/ProductService';
+import SubcategoryComponent from "@/components/SubcategoryComponent.vue";
 
 export default {
   components: {
-    SushiItem,
+    SubcategoryComponent,
   },
   data() {
     return {
       loading: true,
       error: null,
       subcategory: [
-        {id: 1, name: 'Maki'},
-        {id: 2, name: 'Nigiri'},
-        {id: 3, name: 'Sashimi'},
-        {id: 4, name: 'Temaki'}
+        { id: 1, name: "Maki" },
+        { id: 2, name: "Nigiri" },
+        { id: 3, name: "Sashimi" },
+        { id: 4, name: "Temaki" },
       ],
-      filteredProducts: {}
     };
   },
   mounted() {
-    this.subcategory.forEach(subcategory => {
-      this.fetchSushiProducts(subcategory.id);
-    });
+    // Loading is handled per subcategory in SubcategoryComponent
+    this.loading = false;
   },
-  methods: {
-    async fetchSushiProducts(subCategoryId) {
-      this.loading = true;
-
-      try {
-        const allProducts = await productService.getProductsBySubCategory(subCategoryId);
-
-        if (allProducts && Array.isArray(allProducts)) {
-          const sushiProducts = allProducts.filter(product => product.category === 1);
-
-          this.$set(this.filteredProducts, subCategoryId, sushiProducts);
-        } else {
-          this.error = 'Geen producten gevonden voor deze subcategorie.';
-        }
-      } catch (err) {
-        this.error = 'Fout bij het ophalen van de sushi producten.';
-        console.error("Error fetching sushi products:", err);
-      } finally {
-        this.loading = false;
-      }
-    }
-  }
 };
 </script>
+
 
 <style scoped>
 .category-buttons {

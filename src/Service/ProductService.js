@@ -28,14 +28,21 @@ export default {
         }
     },
 
-    async getProductsBySubCategory(categoryId, subCategoryId) {
+    async getProductsBySubCategory(subCategoryId) {
+        if (!subCategoryId) {
+            throw new Error("SubCategory ID is missing or invalid");
+        }
+
+        const url = `/api/Product/category/${subCategoryId}`;
         try {
-            const response = await axios.get(`${API_BASE_URL}/category/${categoryId}/subcategory/${subCategoryId}`);
+            const response = await axios.get(url);
             return response.data;
-        } catch (err) {
-            console.error("Error fetching products by subcategory:", err);
-            throw err;
+        } catch (error) {
+            console.error(`Error fetching products for URL: ${url}`, error);
+            throw error;
         }
     }
+
+
 
 };
