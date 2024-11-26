@@ -1,6 +1,6 @@
 <template>
   <div class="sushi-item">
-    <img :src="item.image" :alt="item.name" class="sushi-img" />
+    <img :src="item.imageUrl" :alt="item.name" class="sushi-img" />
     <p>{{ item.name }}</p>
     <p>€ {{ item.price }}</p>
   </div>
@@ -9,7 +9,7 @@
 <script>
 export default {
   props: {
-    item: Object,
+    item: Object,  // Expecting a sushi product item
   },
 };
 </script>
@@ -23,6 +23,7 @@ export default {
   margin: 10px;
   border-radius: 10px;
 }
+
 .sushi-img {
   width: 80px;
   height: 80px;

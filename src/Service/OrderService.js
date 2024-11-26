@@ -30,5 +30,5 @@ export default {
     async checkout(sessionId,orderData) {
         const response = await axios.post(`${API_ORDER_URL}/place-order/${sessionId}`, orderData);
         return response.data;
-    }
+    },
 };

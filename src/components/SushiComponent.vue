@@ -1,35 +1,64 @@
 <template>
-  <ProductListTemplate
-      title="Sushi"
-      :products="products"
-      :loading="loading"
-      :error="error"
-  />
+  <div>
+    <!-- Sushi category titles -->
+    <div v-for="subcategory in subcategory" :key="subcategory.id">
+      <h2>{{ subcategory.name }}</h2>
+      <div class="product-list">
+        <!-- Loop through filtered products for each subcategory -->
+        <div v-for="product in filteredProducts[subcategory.id]" :key="product.id" class="product-item">
+          <!-- Use the SushiItem component to display individual sushi items -->
+          <SushiItem :item="product" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading and Error Messages -->
+    <div v-if="loading">Loading...</div>
+    <div v-if="error">{{ error }}</div>
+  </div>
 </template>
 
 <script>
-import ProductListTemplate from "@/components/ProductListComponent.vue";
+import SushiItem from "@/components/SushiItemComponent.vue";  // Import SushiItem component
 import productService from '@/Service/ProductService';
 
 export default {
   components: {
-    ProductListTemplate
+    SushiItem,  // Register SushiItem component
   },
   data() {
     return {
-      products: [],
       loading: true,
-      error: null
+      error: null,
+      subcategory: [  // Renamed from `subcategories` to `subcategory`
+        {id: 1, name: 'Maki'},
+        {id: 2, name: 'Nigiri'},
+        {id: 3, name: 'Sashimi'},
+        {id: 4, name: 'Temaki'}
+      ],
+      filteredProducts: {}  // This will hold the filtered products per subcategory
     };
   },
   mounted() {
-    this.fetchSushiProducts();
+    // Fetch products for each subcategory
+    this.subcategory.forEach(subcategory => {
+      this.fetchSushiProducts(subcategory.id);
+    });
   },
   methods: {
-    async fetchSushiProducts() {
+    async fetchSushiProducts(subCategoryId) {
+      this.loading = true;
+
       try {
-        const allProducts = await productService.getAllProducts();
-        this.products = allProducts.filter(product => product.category === 1);
+        const allProducts = await productService.getProductsBySubCategory(subCategoryId);
+        // Ensure the products array exists and is not empty
+        if (allProducts && Array.isArray(allProducts)) {
+          const sushiProducts = allProducts.filter(product => product.category === 1); // Assuming category 1 is for sushi
+          // Store the filtered products for each subcategory
+          this.$set(this.filteredProducts, subCategoryId, sushiProducts);
+        } else {
+          this.error = 'Geen producten gevonden voor deze subcategorie.';
+        }
       } catch (err) {
         this.error = 'Fout bij het ophalen van de sushi producten.';
         console.error("Error fetching sushi products:", err);
