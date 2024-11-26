@@ -78,7 +78,7 @@ export default {
           (item) => item.productId === productId
       );
       if (index !== -1) {
-        if (this.cartItems[index].quantity > 1) {
+        if (this.cartItems[index].quantity >= 1) {
           this.cartItems.splice(index, 1);
         }
       }
@@ -244,7 +244,20 @@ h2 {
 .checkout-button:hover {
   background-color: #219150;
 }
-.remove{
-  background-color: #e74c3c;
+.remove {
+  background-color: #e74c3c; /* Fel rood */
+  color: white; /* Witte tekst */
+  border: none; /* Geen rand */
+  padding: 8px 12px; /* Ruimte binnen de knop */
+  font-size: 0.9em; /* Tekstgrootte */
+  font-weight: bold; /* Maak de tekst vet */
+  border-radius: 5px; /* Rond de hoeken */
+  cursor: pointer; /* Toon een pointer-cursor bij hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Voor animaties */
+}
+
+.remove:hover {
+  background-color: #c0392b; /* Donkerder rood bij hover */
+  transform: scale(1.05); /* Vergroot de knop iets bij hover */
 }
 </style>
