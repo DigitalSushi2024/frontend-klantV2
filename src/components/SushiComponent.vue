@@ -19,28 +19,27 @@
 </template>
 
 <script>
-import SushiItem from "@/components/SushiItemComponent.vue";  // Import SushiItem component
+import SushiItem from "@/components/SushiItemComponent.vue";
 import productService from '@/Service/ProductService';
 
 export default {
   components: {
-    SushiItem,  // Register SushiItem component
+    SushiItem,
   },
   data() {
     return {
       loading: true,
       error: null,
-      subcategory: [  // Renamed from `subcategories` to `subcategory`
+      subcategory: [
         {id: 1, name: 'Maki'},
         {id: 2, name: 'Nigiri'},
         {id: 3, name: 'Sashimi'},
         {id: 4, name: 'Temaki'}
       ],
-      filteredProducts: {}  // This will hold the filtered products per subcategory
+      filteredProducts: {}
     };
   },
   mounted() {
-    // Fetch products for each subcategory
     this.subcategory.forEach(subcategory => {
       this.fetchSushiProducts(subcategory.id);
     });
@@ -51,10 +50,10 @@ export default {
 
       try {
         const allProducts = await productService.getProductsBySubCategory(subCategoryId);
-        // Ensure the products array exists and is not empty
+
         if (allProducts && Array.isArray(allProducts)) {
-          const sushiProducts = allProducts.filter(product => product.category === 1); // Assuming category 1 is for sushi
-          // Store the filtered products for each subcategory
+          const sushiProducts = allProducts.filter(product => product.category === 1);
+
           this.$set(this.filteredProducts, subCategoryId, sushiProducts);
         } else {
           this.error = 'Geen producten gevonden voor deze subcategorie.';
