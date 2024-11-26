@@ -9,7 +9,7 @@
 <script>
 export default {
   props: {
-    item: Object,  // Expecting a sushi product item
+    item: Object,
   },
 };
 </script>

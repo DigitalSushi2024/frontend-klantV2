@@ -18,7 +18,6 @@ export default {
         return response.data;
     },
 
-    // Fetch products based on category and subcategory
     async getProductsByCategory(categoryId, subcategoryId) {
         try {
             const response = await axios.get(`${API_BASE_URL}/category/${categoryId}/subcategory/${subcategoryId}`);
@@ -29,15 +28,13 @@ export default {
         }
     },
 
-    // Fetch products based on subcategory ID
     async getProductsBySubCategory(categoryId, subCategoryId) {
         try {
-            // Fix: Call the correct backend API route with both categoryId and subCategoryId
             const response = await axios.get(`${API_BASE_URL}/category/${categoryId}/subcategory/${subCategoryId}`);
-            return response.data; // Ensure this is an array of products
+            return response.data;
         } catch (err) {
             console.error("Error fetching products by subcategory:", err);
-            throw err; // Rethrow the error to handle it in the component
+            throw err;
         }
     }
 
