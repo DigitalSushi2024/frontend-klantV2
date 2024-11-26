@@ -53,19 +53,7 @@ export default {
         this.cartItems.push({ ...product, quantity: 1 });
       }
     },
-    removeFromCart(productName) {
-      const index = this.cartItems.findIndex(
-          (item) => item.productName === productName
-      );
 
-      if (index !== -1) {
-        if (this.cartItems[index].quantity > 1) {
-          this.cartItems[index].quantity--;
-        } else {
-          this.cartItems.splice(index, 1);
-        }
-      }
-    },
     goToOrderPage() {
       this.$router.push({ name: "Order" }); // Navigate to Order page
     },

@@ -2,29 +2,32 @@
 
 <template>
   <div v-if="!isOrderPage" class="black-container">
-    <CategoryComponents @category-selected="handleCategorySelection" />
+    <CategoryComponents
+        @category-selected="handleCategorySelection"
+        @switch-language="switchLanguage"
+    />
     <div v-if="selectedCategory === 'Sushi'">
       <SushiComponent @add-to-cart="addToCart" />
       <div v-if="showNotification" class="notification">
-        Product added to cart!
+        {{ t.addToCartMessage }}
       </div>
     </div>
     <div v-else-if="selectedCategory === 'Grill'">
       <GrilledComponent @add-to-cart="addToCart" />
       <div v-if="showNotification" class="notification">
-        Product added to cart!
+        {{ t.addToCartMessage }}
       </div>
     </div>
     <div v-else-if="selectedCategory === 'Side Dishes'">
       <DishComponent @add-to-cart="addToCart" />
       <div v-if="showNotification" class="notification">
-        Product added to cart!
+        {{ t.addToCartMessage }}
       </div>
     </div>
     <div v-else-if="selectedCategory === 'Drinks'">
       <DrinkComponent @add-to-cart="addToCart" />
       <div v-if="showNotification" class="notification">
-        Product added to cart!
+        {{ t.addToCartMessage }}
       </div>
     </div>
   </div>
@@ -46,9 +49,35 @@ export default {
   },
   data() {
     return {
+      currentLanguage: "en",
       selectedCategory: null,
       showNotification: false,
+      translations: {
+        en: {
+          addToCartMessage: "Product added to cart!",
+          categories: {
+            sushi: "Sushi",
+            grill: "Grill",
+            sideDishes: "Side Dishes",
+            drinks: "Drinks",
+          },
+        },
+        nl: {
+          addToCartMessage: "Product toegevoegd aan winkelwagen!",
+          categories: {
+            sushi: "Sushi",
+            grill: "Grill",
+            sideDishes: "Bijgerechten",
+            drinks: "Drankjes",
+          },
+        },
+      }
     };
+  },
+  computed: {
+    t() {
+      return this.translations[this.currentLanguage];
+    }
   },
   methods: {
     handleCategorySelection(category) {
@@ -61,6 +90,17 @@ export default {
         this.showNotification = false; // Verberg de notificatie na 2 seconden
       }, 1000);
     },
+    switchLanguage(language) {
+      this.currentLanguage = language; // Werk de huidige taal bij
+      localStorage.setItem("preferredLanguage", language); // Sla de voorkeur op
+    },
+  },
+  created() {
+    // Controleer of er een opgeslagen taalvoorkeur is
+    const savedLanguage = localStorage.getItem("preferredLanguage");
+    if (savedLanguage) {
+      this.currentLanguage = savedLanguage; // Stel de taal in op de opgeslagen waarde
+    }
   },
 };
 </script>
