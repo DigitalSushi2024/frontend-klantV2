@@ -1,5 +1,3 @@
-
-
 <template>
   <div v-if="!isOrderPage" class="black-container">
     <CategoryComponents @category-selected="handleCategorySelection" />
@@ -24,17 +22,19 @@ import GrilledComponent from "@/components/GrilledComponent.vue";
 import CategoryComponents from "@/components/CategoryComponents.vue";
 import DrinkComponent from "@/components/DrinkComponent.vue";
 import SushiComponent from "@/components/SushiComponent.vue";
+
 export default {
   components: {
     CategoryComponents,
     SushiComponent,
     DrinkComponent,
     GrilledComponent,
-    DishComponent
+    DishComponent,
   },
   data() {
     return {
       selectedCategory: null,
+      isOrderPage: false,
     };
   },
   methods: {
@@ -49,7 +49,7 @@ export default {
 </script>
 
 <style scoped>
-.black-container{
+.black-container {
   background-color: #010101;
   width: 100%;
   height: 100%;

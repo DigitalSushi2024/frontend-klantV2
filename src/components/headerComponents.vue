@@ -5,16 +5,16 @@
 
       <div class="language-selecter">
         <img
-            :src="netherlandsIcon"
-            alt="Dutch"
-            class="netherlandsIcon"
-            @click="switchLanguage('nl')"
+          :src="netherlandsIcon"
+          alt="Dutch"
+          class="netherlandsIcon"
+          @click="switchLanguage('nl')"
         />
         <img
-            :src="englishIcon"
-            alt="English"
-            class="englishIcon"
-            @click="switchLanguage('en')"
+          :src="englishIcon"
+          alt="English"
+          class="englishIcon"
+          @click="switchLanguage('en')"
         />
       </div>
 
@@ -41,13 +41,18 @@ export default {
       type: Array,
       default: () => [],
     },
+    currentLanguage: {
+      type: String,
+      default: "en",
+    },
   },
+  emits: ["switchLanguage", "navigateToOrder"],
   data() {
     return {
       headerImage,
       netherlandsIcon,
       englishIcon,
-      currentLanguage: "en", // Default language
+      localLanguage: this.currentLanguage,
       translations: {
         en: {
           tableText: "Table 14",
@@ -63,22 +68,22 @@ export default {
       return this.cartItems.reduce((count, item) => count + item.quantity, 0);
     },
     tableText() {
-      return this.translations[this.currentLanguage].tableText;
+      return this.translations[this.localLanguage].tableText;
     },
   },
   methods: {
     switchLanguage(language) {
-      this.currentLanguage = language;
-      localStorage.setItem("preferredLanguage", language);
+      this.localLanguage = language;
+      this.$emit("switchLanguage", language);
     },
     goToOrderPage() {
-      this.$router.push({ name: "Order" });
+      this.$emit("navigateToOrder");
     },
   },
   created() {
     const savedLanguage = localStorage.getItem("preferredLanguage");
     if (savedLanguage) {
-      this.currentLanguage = savedLanguage;
+      this.localLanguage = savedLanguage;
     }
   },
 };

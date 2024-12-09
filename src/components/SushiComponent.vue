@@ -1,48 +1,82 @@
 <template>
   <div>
-    <div v-for="subcategory in subcategory" :key="subcategory.id">
+    <div v-for="subcategory in subcategories" :key="subcategory.id">
       <!-- Use the SubcategoryComponent to display products for each subcategory -->
-      <SubcategoryComponent :subcategory="subcategory" />
+      <SubCategoryComponent :subcategory="subcategory" :filtered-products="subcategory.filteredProducts" />
     </div>
-
-    <!-- Loading and Error Messages -->
-    <div v-if="loading">Loading...</div>
-    <div v-if="error">{{ error }}</div>
   </div>
 </template>
 
 <script>
-import SubcategoryComponent from "@/components/SubcategoryComponent.vue";
+import { reactive } from 'vue';
+import SubCategoryComponent from "@/components/SubCategoryComponent.vue";
+import productService from "@/Service/ProductService";
 
 export default {
   components: {
-    SubcategoryComponent,
+    SubCategoryComponent,
   },
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       loading: true,
       error: null,
-      subcategory: [
-        { id: 1, name: "Maki" },
-        { id: 2, name: "Nigiri" },
-        { id: 3, name: "Sashimi" },
-        { id: 4, name: "Temaki" },
+      subcategories: [
+        { id: 1, name: "Maki", filteredProducts: [] },
+        { id: 2, name: "Nigiri", filteredProducts: [] },
+        { id: 3, name: "Sashimi", filteredProducts: [] },
+        { id: 4, name: "Temaki", filteredProducts: [] },
       ],
+    });
+
+    const fetchSushiProducts = async () => {
+      state.loading = true;
+      try {
+        for (const subcategory of state.subcategories) {
+          const response = await productService.getProductsBySubCategory(subcategory.id);
+          const allProducts = response.$values || response;
+          console.log("API Data for SubCategory:", subcategory.id, allProducts);
+
+          if (allProducts && Array.isArray(allProducts)) {
+            subcategory.filteredProducts = allProducts.map(product => ({
+              id: product.productId,
+              name: product.productName,
+              price: product.price,
+              imageUrl: product.productImage || 'default-image-path.jpg', // Ensure imageUrl is set
+            }));
+          } else {
+            console.error("No products found for subcategory:", subcategory.id);
+            state.error = `No products found for subcategory ${subcategory.name}`;
+          }
+        }
+      } catch (err) {
+        console.error(`Error fetching products for subcategory:`, err);
+        state.error = `Failed to fetch products for subcategories`;
+      } finally {
+        state.loading = false;
+      }
     };
-  },
-  mounted() {
-    // Loading is handled per subcategory in SubcategoryComponent
-    this.loading = false;
+
+    fetchSushiProducts();
+
+    return {
+      ...state,
+      fetchSushiProducts,
+    };
   },
 };
 </script>
 
-
 <style scoped>
-.category-buttons {
+.product-list {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.product-item {
+  width: 20%;
+  text-align: center;
 }
 
 .category-buttons button {

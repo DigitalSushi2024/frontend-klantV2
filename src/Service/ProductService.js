@@ -20,10 +20,10 @@ export default {
 
     async getProductsByCategory(categoryId, subcategoryId) {
         try {
-            const response = await axios.get(`${API_BASE_URL}/category/${categoryId}/subcategory/${subcategoryId}`);
+            const response = await axios.get(`${API_BASE_URL}/category/${categoryId}`);
             return response.data;
         } catch (error) {
-            console.error(`Error fetching products for category ${categoryId} and subcategory ${subcategoryId}:`, error);
+            console.error(`Error fetching products for category ${categoryId}:`, error);
             throw error;
         }
     },
@@ -33,7 +33,7 @@ export default {
             throw new Error("SubCategory ID is missing or invalid");
         }
 
-        const url = `/api/Product/category/${subCategoryId}`;
+        const url = `${API_BASE_URL}/subcategory/${subCategoryId}`;
         try {
             const response = await axios.get(url);
             return response.data;
@@ -42,7 +42,4 @@ export default {
             throw error;
         }
     }
-
-
-
 };

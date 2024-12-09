@@ -18,7 +18,6 @@
 
 <script>
 import SushiItem from "@/components/SushiItemComponent.vue";
-import productService from "@/Service/ProductService";
 
 export default {
   components: {
@@ -29,39 +28,16 @@ export default {
       type: Object,
       required: true,
     },
+    filteredProducts: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {
-      loading: true,
+      loading: false,
       error: null,
-      filteredProducts: [],
     };
-  },
-  mounted() {
-    this.fetchSushiProducts();
-  },
-  methods: {
-    async fetchSushiProducts() {
-      this.loading = true;
-
-      try {
-        // Pass both categoryId and subcategoryId to the service method
-        const allProducts = await productService.getProductsBySubCategory(this.subcategory.categoryId, this.subcategory.id);
-        console.log("API Data for SubCategory:", this.subcategory.id, allProducts);
-
-        if (allProducts && Array.isArray(allProducts)) {
-          this.filteredProducts = allProducts || [];
-        } else {
-          console.error("No products found for subcategory:", this.subcategory.id);
-          this.error = `No products found for subcategory ${this.subcategory.name}`;
-        }
-      } catch (err) {
-        console.error(`Error fetching products for subcategory ${this.subcategory.id}:`, err);
-        this.error = `Failed to fetch products for subcategory ${this.subcategory.name}`;
-      } finally {
-        this.loading = false;
-      }
-    },
   },
 };
 </script>
@@ -77,12 +53,5 @@ export default {
 .product-item {
   width: 20%;
   text-align: center;
-}
-
-.product-image {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  border-radius: 10px;
 }
 </style>
