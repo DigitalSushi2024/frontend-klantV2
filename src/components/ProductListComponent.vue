@@ -5,13 +5,13 @@
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else>
       <div class="product-container">
-        <div v-for="product in products" :key="product.productId" class="product-item">
+        <div v-for="product in products" :key="product.id" class="product-item">
           <img
-              :src="product.productImage || defaultImage"
-              :alt="product.productName"
+              :src="product.imageUrl || defaultImage"
+              :alt="product.name"
               class="product-image"
           />
-          <h3>{{ product.productName }}</h3>
+          <h3>{{ product.name }}</h3>
           <p>€{{ product.price.toFixed(2) }}</p>
           <button
               class="add-to-cart-btn"
@@ -27,24 +27,12 @@
 </template>
 
 <script>
-/**
- * @typedef {Object} Product
- * @property {number} productId
- * @property {string} productName
- * @property {string} productImage
- * @property {number} category
- * @property {number} price
- */
-
 export default {
   props: {
     title: {
       type: String,
       required: true
     },
-    /**
-     * @type {Product[]}
-     */
     products: {
       type: Array,
       required: true,
@@ -61,7 +49,6 @@ export default {
   },
   data() {
     return {
-      // Default image in case no product image is available
       defaultImage: 'path/to/default-image.jpg'
     };
   },

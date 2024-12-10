@@ -1,6 +1,6 @@
 ﻿<template>
   <div>
-    <!-- Sushi category title -->
+    <!-- Category title -->
     <h2>{{ subcategory.name }}</h2>
 
     <!-- Loading and Error Messages -->
@@ -8,20 +8,20 @@
     <div v-if="error">{{ error }}</div>
 
     <!-- Product list -->
-    <div class="product-list">
-      <div v-for="product in filteredProducts" :key="product.id" class="product-item">
-        <SushiItem :item="product" />
-      </div>
-    </div>
+    <ProductListComponent
+      :products="filteredProducts"
+      :loading="loading"
+      :error="error"
+    />
   </div>
 </template>
 
 <script>
-import SushiItem from "@/components/SushiItemComponent.vue";
+import ProductListComponent from "@/components/ProductListComponent.vue";
 
 export default {
   components: {
-    SushiItem,
+    ProductListComponent,
   },
   props: {
     subcategory: {

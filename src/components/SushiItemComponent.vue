@@ -1,43 +1,44 @@
 <template>
-  <div class="sushi-item">
-    <img :src="item.imageUrl" :alt="item.name" class="sushi-img" />
-    <p>{{ item.name }}</p>
-    <p>€ {{ item.price.toFixed(2) }}</p>
-    <button
-      class="add-to-cart-btn"
-      @click="addToCart(item)"
-      aria-label="Add to Cart"
-    >
-      Add to Cart
-    </button>
+  <div>
+    <!-- Category title -->
+    <h2>{{ subcategory.name }}</h2>
+
+    <!-- Loading and Error Messages -->
+    <div v-if="loading">Loading...</div>
+    <div v-if="error">{{ error }}</div>
+
+    <!-- Product list -->
+    <ProductListComponent
+      :title="subcategory.name"
+      :products="filteredProducts"
+      :loading="loading"
+      :error="error"
+    />
   </div>
 </template>
 
 <script>
-import OrderService from '@/Service/OrderService';
+import ProductListComponent from "@/components/ProductListComponent.vue";
 
 export default {
+  components: {
+    ProductListComponent,
+  },
   props: {
-    item: {
+    subcategory: {
       type: Object,
       required: true,
     },
-  },
-  methods: {
-    async addToCart(item) {
-      try {
-        const orderData = {
-          productId: item.id,
-          quantity: 1, // Assuming a quantity of 1 for simplicity
-        };
-        console.log('Order data being sent:', orderData);
-        const response = await OrderService.placeOrder(orderData);
-        console.log('Order placed successfully:', response);
-        this.$emit('order-placed', response);
-      } catch (error) {
-        console.error('Error placing order:', error);
-      }
+    filteredProducts: {
+      type: Array,
+      required: true,
     },
+  },
+  data() {
+    return {
+      loading: false,
+      error: null,
+    };
   },
 };
 </script>
