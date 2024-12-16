@@ -1,21 +1,22 @@
 <template>
   <div>
+    <h2>Sushi Categories</h2>
+    <div v-if="state.loading">Loading...</div>
+    <div v-if="state.error">{{ state.error }}</div>
+
     <div v-for="subcategory in state.subcategories" :key="subcategory.id">
-      <SubCategoryComponent 
-        :subcategory="subcategory" 
-        :filtered-products="subcategory.filteredProducts"
-        @add-to-cart="handleAddToCart"
-      >
-        <ProductListComponent 
-          :products="subcategory.filteredProducts" 
-          :loading="state.loading" 
-          :error="state.error" 
+      <h3>{{ subcategory.name }}</h3>
+      <ProductListComponent
+          :products="subcategory.filteredProducts"
+          :loading="state.loading"
+          :error="state.error"
           :title="subcategory.name"
-        />
-      </SubCategoryComponent>
+          @add-to-cart="handleAddToCart"
+      />
     </div>
   </div>
 </template>
+
 
 <script>
 import { reactive, onMounted } from 'vue';
@@ -27,6 +28,12 @@ export default {
   components: {
     SubCategoryComponent,
     ProductListComponent, // Ensure this registration
+  },
+  methods: {
+    handleAddToCart(product) {
+      console.log("Product toegevoegd vanuit SushiComponent:", product);
+      this.$emit("add-to-cart", product);
+    },
   },
   setup() {
     const state = reactive({
@@ -69,6 +76,7 @@ export default {
       }
     };
     fetchSushiProducts();
+
 
     return {
       state,

@@ -8,10 +8,10 @@
 
     <!-- Order items list -->
     <div class="order-items">
-      <div v-for="item in cartItems" :key="item.productId" class="order-item">
-        <img :src="`${item.productImage}`" :alt="item.productName" class="item-image" />
+      <div v-for="item in cartItems" :key="item.id" class="order-item">
+        <img :src="`${item.imageUrl}`" :alt="item.name" class="item-image" />
         <div class="item-details">
-          <h3>{{ item.productName }}</h3>
+          <h3>{{ item.name }}</h3>
           <p>Price: €{{ item.price.toFixed(2) }}</p>
           <div class="quantity-controls">
             <button class="quantity-button" @click="decreaseQuantity(item.productId)">−</button>
@@ -92,7 +92,7 @@ export default {
       try {
         // Maak een lijst van OrderItemsDTO
         const orderItemsDto = this.cartItems.map(item => ({
-          productId: item.productId,
+          productId: item.id,
           quantity: item.quantity,
           unitPrice: item.price,
         }));

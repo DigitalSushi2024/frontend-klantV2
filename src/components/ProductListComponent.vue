@@ -27,23 +27,13 @@
 </template>
 
 <script>
-/**
- * @typedef {Object} Product
- * @property {number} productId
- * @property {string} productName
- * @property {string} productImage
- * @property {number} category
- * @property {number} price
- */
+
 export default {
   props: {
     title: {
       type: String,
       required: true
     },
-    /**
-     * @type {Product[]}
-     */
     products: {
       type: Array,
       required: true,

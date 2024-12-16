@@ -38,9 +38,10 @@ export default {
   },
   methods: {
     handleAddToCart(product) {
+      console.log("Product in subcategory",  product);
       this.$emit('add-to-cart', product);
     }
-  }
+  },
 };
 </script>
 

@@ -1,7 +1,8 @@
 <template>
   <div>
     <div v-for="subcategory in subcategories" :key="subcategory.id">
-      <SubCategoryComponent :subcategory="subcategory" :filtered-products="subcategory.filteredProducts" />
+      <SubCategoryComponent :subcategory="subcategory" :filtered-products="subcategory.filteredProducts"
+                            @add-to-cart="handleAddToCart"/>
     </div>
   </div>
 </template>
@@ -10,10 +11,18 @@
 import { reactive } from 'vue';
 import SubCategoryComponent from "@/components/SubCategoryComponent.vue";
 import productService from '@/Service/ProductService';
+import ProductListComponent from "@/components/ProductListComponent.vue";
 
 export default {
   components: {
+    ProductListComponent,
     SubCategoryComponent,
+  },
+  methods: {
+    handleAddToCart(product) {
+      console.log("Product toegevoegd vanuit dish", product);
+      this.$emit("add-to-cart", product);
+    },
   },
   setup() {
     const state = reactive({

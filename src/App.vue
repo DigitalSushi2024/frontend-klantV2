@@ -46,7 +46,7 @@ export default {
       console.log("Product received in App.vue:", product);
 
       const existingItem = this.cartItems.find(
-          (item) => item.productId === product.productId
+          (item) => item.id === product.id
       );
 
       if (existingItem) {
