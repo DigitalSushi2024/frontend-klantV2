@@ -1,17 +1,33 @@
 <template>
   <div v-if="!isOrderPage" class="black-container">
-    <CategoryComponents @category-selected="handleCategorySelection" />
+    <CategoryComponents
+        @category-selected="handleCategorySelection"
+        @switch-language="switchLanguage"
+
+    />
     <div v-if="selectedCategory === 'Sushi'">
       <SushiComponent @add-to-cart="addToCart" />
+      <div v-if="showNotification" class="notification">
+        {{ t.addToCartMessage }}
+      </div>
     </div>
     <div v-else-if="selectedCategory === 'Grill'">
       <GrilledComponent @add-to-cart="addToCart" />
+      <div v-if="showNotification" class="notification">
+        {{ t.addToCartMessage }}
+      </div>
     </div>
     <div v-else-if="selectedCategory === 'Side Dishes'">
       <DishComponent @add-to-cart="addToCart" />
+      <div v-if="showNotification" class="notification">
+        {{ t.addToCartMessage }}
+      </div>
     </div>
     <div v-else-if="selectedCategory === 'Drinks'">
       <DrinkComponent @add-to-cart="addToCart" />
+      <div v-if="showNotification" class="notification">
+        {{ t.addToCartMessage }}
+      </div>
     </div>
   </div>
 </template>
@@ -33,25 +49,61 @@ export default {
   },
   data() {
     return {
+      currentLanguage: "en",
       selectedCategory: null,
-      isOrderPage: false,
-      cart: [], // Add cart state
-    };
+      showNotification: false,
+      translations: {
+        en: {
+          addToCartMessage: "Product added to cart!",
+          categories: {
+            sushi: "Sushi",
+            grill: "Grill",
+            sideDishes: "Side Dishes",
+            drinks: "Drinks",
+          },
+        },
+        nl: {
+          addToCartMessage: "Product toegevoegd aan winkelwagen!",
+          categories: {
+            sushi: "Sushi",
+            grill: "Grill",
+            sideDishes: "Bijgerechten",
+            drinks: "Drankjes",
+          },
+        },
+      },
+      /*isOrderPage: false,
+      cart: [],*/ // Add cart state
+    }
   },
+  computed: {
+    t() {
+      return this.translations[this.currentLanguage];
+    }
+  },
+
   methods: {
     handleCategorySelection(category) {
       this.selectedCategory = category;
     },
     addToCart(product) {
-      console.log("Received product in HomePage:", product); // Controleer product
-      const existingProduct = this.cart.find(item => item.productId === product.id);
-      if (existingProduct) {
-        existingProduct.quantity += 1;
-      } else {
-        this.cart.push({ ...product, productId: product.id, quantity: 1 });
-      }
-      this.cart = [...this.cart];
+      this.$emit("add-to-cart", product);
+      this.showNotification = true;
+      setTimeout(() => {
+        this.showNotification = false;
+      }, 1000);
     },
+    switchLanguage(language) {
+      this.currentLanguage = language;
+      localStorage.setItem("preferredLanguage", language);
+    },
+  },
+  created() {
+    // Controleer of er een opgeslagen taalvoorkeur is
+    const savedLanguage = localStorage.getItem("preferredLanguage");
+    if (savedLanguage) {
+      this.currentLanguage = savedLanguage;
+    }
   },
 };
 </script>

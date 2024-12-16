@@ -8,7 +8,7 @@
         @click="selectCategory(category)"
     >
       <img :src="category.image" :alt="category.name" class="category-image" />
-      {{ getTranslatedCategoryName(category) }} <!-- Bind the computed translated name -->
+      {{ getTranslatedCategoryName(category) }}
     </button>
   </div>
 </template>

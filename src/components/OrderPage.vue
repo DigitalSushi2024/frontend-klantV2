@@ -31,6 +31,7 @@
   </div>
 </template>
 
+
 <script>
 import orderService from "@/Service/OrderService.js";
 
@@ -111,7 +112,7 @@ export default {
     },
 
     goBack() {
-      this.$router.push("/"); // Navigeer terug naar de homepagina
+      this.$router.push("/");
     },
   },
 };

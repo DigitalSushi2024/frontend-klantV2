@@ -42,7 +42,6 @@ export default {
   },
   methods: {
     handleAddToCart(product) {
-      console.log("Received product in SubcategoryComponent:", product); // Controleer product
       this.$emit('add-to-cart', product);
     }
   }
