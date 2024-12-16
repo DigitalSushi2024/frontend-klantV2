@@ -13,6 +13,7 @@
       :products="filteredProducts"
       :loading="loading"
       :error="error"
+      @add-to-cart="handleAddToCart"
     />
   </div>
 </template>
@@ -40,6 +41,11 @@ export default {
       error: null,
     };
   },
+  methods: {
+    handleAddToCart(product) {
+      this.$emit('add-to-cart', product);
+    }
+  }
 };
 </script>
 

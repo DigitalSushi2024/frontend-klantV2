@@ -47,15 +47,15 @@ export default {
       default: null
     }
   },
-  data() {
-    return {
-      defaultImage: 'path/to/default-image.jpg'
-    };
-  },
   methods: {
     addToCart(product) {
       this.$emit('add-to-cart', product);
     }
+  },
+  data() {
+    return {
+      defaultImage: 'default-image-path.jpg'
+    };
   }
 };
 </script>

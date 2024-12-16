@@ -35,6 +35,7 @@ export default {
     return {
       selectedCategory: null,
       isOrderPage: false,
+      cart: [], // Add cart state
     };
   },
   methods: {
@@ -42,7 +43,8 @@ export default {
       this.selectedCategory = category;
     },
     addToCart(product) {
-      this.$emit("add-to-cart", product);
+      console.log('Product added to cart:', product);
+      this.cart.push(product); // Add product to cart
     },
   },
 };

@@ -1,7 +1,6 @@
 ﻿<template>
   <div>
     <!-- Category title -->
-    <h2>{{ subcategory.name }}</h2>
 
     <!-- Loading and Error Messages -->
     <div v-if="loading">Loading...</div>
@@ -9,9 +8,11 @@
 
     <!-- Product list -->
     <ProductListComponent
+      :title="subcategory.name"
       :products="filteredProducts"
       :loading="loading"
       :error="error"
+      @add-to-cart="handleAddToCart"
     />
   </div>
 </template>
@@ -39,6 +40,11 @@ export default {
       error: null,
     };
   },
+  methods: {
+    handleAddToCart(product) {
+      this.$emit('add-to-cart', product);
+    }
+  }
 };
 </script>
 

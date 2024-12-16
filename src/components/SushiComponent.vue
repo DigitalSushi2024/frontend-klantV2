@@ -1,20 +1,32 @@
 <template>
   <div>
-    <div v-for="subcategory in subcategories" :key="subcategory.id">
-      <!-- Use the SubcategoryComponent to display products for each subcategory -->
-      <SubCategoryComponent :subcategory="subcategory" :filtered-products="subcategory.filteredProducts" />
+    <div v-for="subcategory in state.subcategories" :key="subcategory.id">
+      <SubCategoryComponent 
+        :subcategory="subcategory" 
+        :filtered-products="subcategory.filteredProducts"
+        @add-to-cart="handleAddToCart"
+      >
+        <ProductListComponent 
+          :products="subcategory.filteredProducts" 
+          :loading="state.loading" 
+          :error="state.error" 
+          :title="subcategory.name"
+        />
+      </SubCategoryComponent>
     </div>
   </div>
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { reactive, onMounted } from 'vue';
 import SubCategoryComponent from "@/components/SubCategoryComponent.vue";
+import ProductListComponent from "@/components/ProductListComponent.vue"; // Ensure this import
 import productService from "@/Service/ProductService";
 
 export default {
   components: {
     SubCategoryComponent,
+    ProductListComponent, // Ensure this registration
   },
   setup() {
     const state = reactive({
@@ -26,6 +38,7 @@ export default {
         { id: 3, name: "Sashimi", filteredProducts: [] },
         { id: 4, name: "Temaki", filteredProducts: [] },
       ],
+      cart: [], // Add cart state
     });
 
     const fetchSushiProducts = async () => {
@@ -56,11 +69,18 @@ export default {
       }
     };
 
-    fetchSushiProducts();
+    onMounted(() => {
+      fetchSushiProducts();
+    });
+
+    const handleAddToCart = (product) => {
+      console.log('Product added to cart:', product);
+      state.cart.push(product); // Add product to cart
+    };
 
     return {
-      ...state,
-      fetchSushiProducts,
+      state,
+      handleAddToCart,
     };
   },
 };
