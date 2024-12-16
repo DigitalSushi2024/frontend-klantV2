@@ -35,8 +35,10 @@
 import orderService from "@/Service/OrderService.js";
 
 export default {
+  path: '/order',
   name: "OrderPage",
-  props: {
+  props:
+      {
     cartItems: {
       type: Array,
       default: () => [],
@@ -44,6 +46,7 @@ export default {
     sessionId: {
       type: Number,
       required: true,
+      default: 0,
     },
   },
   computed: {
@@ -117,7 +120,7 @@ export default {
 <style scoped>
 /* Algemene container */
 .order-page {
-  max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;

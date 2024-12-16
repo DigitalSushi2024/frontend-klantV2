@@ -52,6 +52,9 @@ export default {
       } else {
         this.cartItems.push({ ...product, quantity: 1 });
       }
+
+      // Forceer Vue om de array als nieuw te zien
+      this.cartItems = [...this.cartItems];
     },
     removeFromCart(productName) {
       const index = this.cartItems.findIndex(

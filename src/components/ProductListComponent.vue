@@ -49,6 +49,7 @@ export default {
   },
   methods: {
     addToCart(product) {
+      console.log("Emitting add-to-cart:", product); // Controleer product
       this.$emit('add-to-cart', product);
     }
   },

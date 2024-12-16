@@ -43,8 +43,14 @@ export default {
       this.selectedCategory = category;
     },
     addToCart(product) {
-      console.log('Product added to cart:', product);
-      this.cart.push(product); // Add product to cart
+      console.log("Received product in HomePage:", product); // Controleer product
+      const existingProduct = this.cart.find(item => item.productId === product.id);
+      if (existingProduct) {
+        existingProduct.quantity += 1;
+      } else {
+        this.cart.push({ ...product, productId: product.id, quantity: 1 });
+      }
+      this.cart = [...this.cart];
     },
   },
 };

@@ -46,6 +46,10 @@ export default {
       default: "en",
     },
   },
+  watch: {
+    cartItems(newVal) {
+      console.log("Updated cartItems in HeaderComponent:", newVal);
+    },
   emits: ["switchLanguage", "navigateToOrder"],
   data() {
     return {
