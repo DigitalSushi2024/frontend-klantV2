@@ -8,10 +8,10 @@
 
     <!-- Order items list -->
     <div class="order-items">
-      <div v-for="item in cartItems" :key="item.productId" class="order-item">
-        <img :src="`${item.productImage}`" :alt="item.productName" class="item-image" />
+      <div v-for="item in cartItems" :key="item.id" class="order-item">
+        <img :src="`${item.imageUrl}`" :alt="item.name" class="item-image" />
         <div class="item-details">
-          <h3>{{ item.productName }}</h3>
+          <h3>{{ item.name }}</h3>
           <p>Price: €{{ item.price.toFixed(2) }}</p>
           <div class="quantity-controls">
             <button class="quantity-button" @click="decreaseQuantity(item.productId)">−</button>
@@ -31,12 +31,15 @@
   </div>
 </template>
 
+
 <script>
 import orderService from "@/Service/OrderService.js";
 
 export default {
+  path: '/order',
   name: "OrderPage",
-  props: {
+  props:
+      {
     cartItems: {
       type: Array,
       default: () => [],
@@ -44,6 +47,7 @@ export default {
     sessionId: {
       type: Number,
       required: true,
+      default: 0,
     },
   },
   computed: {
@@ -88,7 +92,7 @@ export default {
       try {
         // Maak een lijst van OrderItemsDTO
         const orderItemsDto = this.cartItems.map(item => ({
-          productId: item.productId,
+          productId: item.id,
           quantity: item.quantity,
           unitPrice: item.price,
         }));
@@ -108,7 +112,7 @@ export default {
     },
 
     goBack() {
-      this.$router.push("/"); // Navigeer terug naar de homepagina
+      this.$router.push("/");
     },
   },
 };
@@ -117,7 +121,7 @@ export default {
 <style scoped>
 /* Algemene container */
 .order-page {
-  max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;

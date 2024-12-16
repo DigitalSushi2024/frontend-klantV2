@@ -1,46 +1,78 @@
 <template>
-  <ProductListTemplate
-      title="Grill"
-      :products="products"
-      :loading="loading"
-      :error="error"
-  />
+  <div>
+    <div v-for="subcategory in subcategories" :key="subcategory.id">
+      <SubCategoryComponent
+          :subcategory="subcategory"
+          :filtered-products="subcategory.filteredProducts"
+          @add-to-cart="handleAddToCart"/>
+    </div>
+  </div>
 </template>
 
 <script>
-import ProductListTemplate from "@/components/ProductListComponent.vue";
+import { reactive } from 'vue';
+import SubCategoryComponent from "@/components/SubCategoryComponent.vue";
 import productService from '@/Service/ProductService';
+import ProductListComponent from "@/components/ProductListComponent.vue";
 
 export default {
   components: {
-    ProductListTemplate
-  },
-  data() {
-    return {
-      products: [],
-      loading: true,
-      error: null
-    };
-  },
-  mounted() {
-    this.fetchGrilledItems();
+    ProductListComponent,
+    SubCategoryComponent,
   },
   methods: {
-    async fetchGrilledItems() {
+    handleAddToCart(product) {
+      console.log("Product toegevoegd vanuit grilled", product);
+      this.$emit("add-to-cart", product);
+    },
+  },
+  setup() {
+    const state = reactive({
+      loading: true,
+      error: null,
+      subcategories: [
+        { id: 5, name: "Meat", filteredProducts: [] },
+        { id: 6, name: "Fish", filteredProducts: [] },
+        { id: 7, name: "Vegetables", filteredProducts: [] },
+      ],
+    });
+
+    const fetchGrilledItems = async () => {
+      state.loading = true;
       try {
-        const allProducts = await productService.getAllProducts();
-        this.products = allProducts.filter(product => product.category === 2);
+        for (const subcategory of state.subcategories) {
+          const response = await productService.getProductsBySubCategory(subcategory.id);
+          const allProducts = response.$values || response;
+          console.log(`Fetched products for ${subcategory.name}:`, allProducts);
+
+          if (allProducts && Array.isArray(allProducts)) {
+            subcategory.filteredProducts = allProducts.map(product => ({
+              id: product.productId,
+              name: product.productName,
+              price: product.price,
+              imageUrl: product.productImage || 'default-image-path.jpg',
+            }));
+          } else {
+            state.error = `No products found for subcategory ${subcategory.name}`;
+          }
+        }
       } catch (err) {
-        this.error = 'Fout bij het ophalen van de grill items.';
-        console.error("Error fetching grilled items:", err);
+        state.error = `Failed to fetch products for subcategories`;
+        console.error(`Error fetching products for subcategories:`, err);
       } finally {
-        this.loading = false;
+        state.loading = false;
       }
-    }
-  }
+    };
+
+    fetchGrilledItems();
+
+    return {
+      ...state,
+      fetchGrilledItems,
+    };
+  },
 };
 </script>
 
 <style scoped>
-
 </style>

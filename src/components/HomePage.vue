@@ -5,6 +5,7 @@
     <CategoryComponents
         @category-selected="handleCategorySelection"
         @switch-language="switchLanguage"
+
     />
     <div v-if="selectedCategory === 'Sushi'">
       <SushiComponent @add-to-cart="addToCart" />
@@ -39,13 +40,14 @@ import GrilledComponent from "@/components/GrilledComponent.vue";
 import CategoryComponents from "@/components/CategoryComponents.vue";
 import DrinkComponent from "@/components/DrinkComponent.vue";
 import SushiComponent from "@/components/SushiComponent.vue";
+
 export default {
   components: {
     CategoryComponents,
     SushiComponent,
     DrinkComponent,
     GrilledComponent,
-    DishComponent
+    DishComponent,
   },
   data() {
     return {
@@ -71,35 +73,38 @@ export default {
             drinks: "Drankjes",
           },
         },
-      }
-    };
+      },
+      /*isOrderPage: false,
+      cart: [],*/ // Add cart state
+    }
   },
   computed: {
     t() {
       return this.translations[this.currentLanguage];
     }
   },
+
   methods: {
     handleCategorySelection(category) {
       this.selectedCategory = category;
     },
     addToCart(product) {
       this.$emit("add-to-cart", product);
-      this.showNotification = true; // Toon de notificatie
+      this.showNotification = true;
       setTimeout(() => {
-        this.showNotification = false; // Verberg de notificatie na 2 seconden
+        this.showNotification = false;
       }, 1000);
     },
     switchLanguage(language) {
-      this.currentLanguage = language; // Werk de huidige taal bij
-      localStorage.setItem("preferredLanguage", language); // Sla de voorkeur op
+      this.currentLanguage = language;
+      localStorage.setItem("preferredLanguage", language);
     },
   },
   created() {
     // Controleer of er een opgeslagen taalvoorkeur is
     const savedLanguage = localStorage.getItem("preferredLanguage");
     if (savedLanguage) {
-      this.currentLanguage = savedLanguage; // Stel de taal in op de opgeslagen waarde
+      this.currentLanguage = savedLanguage;
     }
   },
 };

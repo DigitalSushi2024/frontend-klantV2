@@ -43,8 +43,10 @@ export default {
   },
   methods: {
     addToCart(product) {
+      console.log("Product received in App.vue:", product);
+
       const existingItem = this.cartItems.find(
-          (item) => item.productName === product.productName
+          (item) => item.id === product.id
       );
 
       if (existingItem) {
@@ -52,6 +54,10 @@ export default {
       } else {
         this.cartItems.push({ ...product, quantity: 1 });
       }
+
+      // Forceer Vue-reactiviteit
+      this.cartItems = [...this.cartItems];
+      console.log("Updated cartItems in App.vue:", this.cartItems);
     },
 
     goToOrderPage() {

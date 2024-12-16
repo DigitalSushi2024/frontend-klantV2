@@ -6,6 +6,9 @@
     <ul v-if="products && products.length">
       <li v-for="product in products" :key="product.id">
         {{ product.name }} - €{{ product.price }}
+        <div v-if="getSubCategoryName(product.sub_category_id)">
+          <strong>Subcategory:</strong> {{ getSubCategoryName(product.sub_category_id) }}
+        </div>
       </li>
     </ul>
   </div>
@@ -20,6 +23,20 @@ export default {
       products: [],
       loading: true,
       error: null,
+      subCategories: [
+        {id: 1, name: 'Maki'},
+        {id: 2, name: 'Nigiri'},
+        {id: 3, name: 'Sashimi'},
+        {id: 4, name: 'Temaki'},
+        {id: 5, name: 'Meat'},
+        {id: 6, name: 'Fish'},
+        {id: 7, name: 'Vegetables'},
+        {id: 8, name: 'Cold Dishes'},
+        {id: 9, name: 'Hot Dishes'},
+        {id: 10, name: 'Hot Drinks'},
+        {id: 11, name: 'Cold Drinks'},
+        {id: 12, name: 'Alcoholic Drinks'}
+      ],
     };
   },
   mounted() {
@@ -58,6 +75,11 @@ export default {
         this.loading = false;
       }
     },
+
+    getSubCategoryName(subCategoryId) {
+      const subCategory = this.subCategories.find(sub => sub.id === subCategoryId);
+      return subCategory ? subCategory.name : 'Unknown Subcategory';
+    }
   },
 };
 </script>

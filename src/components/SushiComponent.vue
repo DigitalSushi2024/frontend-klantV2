@@ -1,51 +1,102 @@
 <template>
-  <ProductListTemplate
-      title="Sushi"
-      :products="products"
-      :loading="loading"
-      :error="error"
-  />
+  <div>
+    <h2>Sushi Categories</h2>
+    <div v-if="state.loading">Loading...</div>
+    <div v-if="state.error">{{ state.error }}</div>
+
+    <div v-for="subcategory in state.subcategories" :key="subcategory.id">
+      <h3>{{ subcategory.name }}</h3>
+      <ProductListComponent
+          :products="subcategory.filteredProducts"
+          :loading="state.loading"
+          :error="state.error"
+          :title="subcategory.name"
+          @add-to-cart="handleAddToCart"
+      />
+    </div>
+  </div>
 </template>
 
+
 <script>
-import ProductListTemplate from "@/components/ProductListComponent.vue";
-import productService from '@/Service/ProductService';
+import { reactive, onMounted } from 'vue';
+import SubCategoryComponent from "@/components/SubCategoryComponent.vue";
+import ProductListComponent from "@/components/ProductListComponent.vue"; // Ensure this import
+import productService from "@/Service/ProductService";
 
 export default {
   components: {
-    ProductListTemplate
-  },
-  data() {
-    return {
-      products: [],
-      loading: true,
-      error: null
-    };
-  },
-  mounted() {
-    this.fetchSushiProducts();
+    SubCategoryComponent,
+    ProductListComponent, // Ensure this registration
   },
   methods: {
-    async fetchSushiProducts() {
+    handleAddToCart(product) {
+      console.log("Product toegevoegd vanuit SushiComponent:", product);
+      this.$emit("add-to-cart", product);
+    },
+  },
+  setup() {
+    const state = reactive({
+      loading: true,
+      error: null,
+      subcategories: [
+        { id: 1, name: "Maki", filteredProducts: [] },
+        { id: 2, name: "Nigiri", filteredProducts: [] },
+        { id: 3, name: "Sashimi", filteredProducts: [] },
+        { id: 4, name: "Temaki", filteredProducts: [] },
+      ],
+      cart: [], // Add cart state
+    });
+
+    const fetchSushiProducts = async () => {
+      state.loading = true;
       try {
-        const allProducts = await productService.getAllProducts();
-        this.products = allProducts.filter(product => product.category === 1);
+        for (const subcategory of state.subcategories) {
+          const response = await productService.getProductsBySubCategory(subcategory.id);
+          const allProducts = response.$values || response;
+          console.log("API Data for SubCategory:", subcategory.id, allProducts);
+
+          if (allProducts && Array.isArray(allProducts)) {
+            subcategory.filteredProducts = allProducts.map(product => ({
+              id: product.productId,
+              name: product.productName,
+              price: product.price,
+              imageUrl: product.productImage || 'default-image-path.jpg', // Ensure imageUrl is set
+            }));
+          } else {
+            console.error("No products found for subcategory:", subcategory.id);
+            state.error = `No products found for subcategory ${subcategory.name}`;
+          }
+        }
       } catch (err) {
-        this.error = 'Fout bij het ophalen van de sushi producten.';
-        console.error("Error fetching sushi products:", err);
+        console.error(`Error fetching products for subcategory:`, err);
+        state.error = `Failed to fetch products for subcategories`;
       } finally {
-        this.loading = false;
+        state.loading = false;
       }
-    }
-  }
+    };
+    fetchSushiProducts();
+
+
+    return {
+      state,
+      fetchSushiProducts
+    };
+  },
 };
 </script>
 
 <style scoped>
-.category-buttons {
+.product-list {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.product-item {
+  width: 20%;
+  text-align: center;
 }
 
 .category-buttons button {
