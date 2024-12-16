@@ -1,12 +1,8 @@
 ﻿<template>
   <div>
-    <!-- Category title -->
-
-    <!-- Loading and Error Messages -->
     <div v-if="loading">Loading...</div>
     <div v-if="error">{{ error }}</div>
 
-    <!-- Product list -->
     <ProductListComponent
       :title="subcategory.name"
       :products="filteredProducts"

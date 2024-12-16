@@ -68,19 +68,11 @@ export default {
         state.loading = false;
       }
     };
-
-    onMounted(() => {
-      fetchSushiProducts();
-    });
-
-    const handleAddToCart = (product) => {
-      console.log('Product added to cart:', product);
-      state.cart.push(product); // Add product to cart
-    };
+    fetchSushiProducts();
 
     return {
       state,
-      handleAddToCart,
+      fetchSushiProducts
     };
   },
 };
