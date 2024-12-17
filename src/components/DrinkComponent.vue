@@ -1,7 +1,12 @@
 <template>
   <div>
     <div v-for="subcategory in subcategories" :key="subcategory.id">
-      <SubCategoryComponent :subcategory="subcategory" :filtered-products="subcategory.filteredProducts"  @add-to-cart="handleAddToCart"/>
+      <br>
+      <h2>{{subcategory.name}} </h2>
+      <SubCategoryComponent
+          :subcategory="subcategory"
+          :filtered-products="subcategory.filteredProducts"
+          @add-to-cart="handleAddToCart"/>
     </div>
   </div>
 </template>

@@ -4,7 +4,6 @@
     <div v-if="error">{{ error }}</div>
 
     <ProductListComponent
-      :title="subcategory.name"
       :products="filteredProducts"
       :loading="loading"
       :error="error"
@@ -38,7 +37,6 @@ export default {
   },
   methods: {
     handleAddToCart(product) {
-      console.log("Product in subcategory",  product);
       this.$emit('add-to-cart', product);
     }
   },

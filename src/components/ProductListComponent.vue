@@ -8,10 +8,10 @@
         <div v-for="product in products" :key="product.productId" class="product-item">
           <img
               :src="product.imageUrl || defaultImage"
-              :alt="product.productName"
+              :alt="product.name"
               class="product-image"
           />
-          <h3>{{ product.productName }}</h3>
+          <h3>{{ product.name }}</h3>
           <p>€{{ product.price.toFixed(2) }}</p>
           <button
               class="add-to-cart-btn"
@@ -32,7 +32,7 @@ export default {
   props: {
     title: {
       type: String,
-      required: true
+      required: false
     },
     products: {
       type: Array,

@@ -1,8 +1,12 @@
 <template>
   <div>
     <div v-for="subcategory in subcategories" :key="subcategory.id">
-      <SubCategoryComponent :subcategory="subcategory" :filtered-products="subcategory.filteredProducts"
-                            @add-to-cart="handleAddToCart"/>
+      <br>
+      <h2> {{ subcategory.name }}</h2>
+      <SubCategoryComponent
+          :subcategory="subcategory"
+          :filtered-products="subcategory.filteredProducts"
+          @add-to-cart="handleAddToCart"/>
     </div>
   </div>
 </template>
@@ -40,7 +44,6 @@ export default {
         for (const subcategory of state.subcategories) {
           const response = await productService.getProductsBySubCategory(subcategory.id);
           const allProducts = response.$values || response;
-          console.log(`Fetched products for ${subcategory.name}:`, allProducts);
 
           if (allProducts && Array.isArray(allProducts)) {
             subcategory.filteredProducts = allProducts.map(product => ({
@@ -55,7 +58,6 @@ export default {
         }
       } catch (err) {
         state.error = `Failed to fetch products for subcategories`;
-        console.error(`Error fetching products for subcategories:`, err);
       } finally {
         state.loading = false;
       }

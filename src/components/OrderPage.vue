@@ -1,4 +1,7 @@
 <template>
+  <div v-if="notification.message" :class="['notification', notification.type]">
+    {{ notification.message }}
+  </div>
   <div class="order-page">
     <!-- Header met de terugknop -->
     <div class="header">
@@ -14,10 +17,10 @@
           <h3>{{ item.name }}</h3>
           <p>Price: €{{ item.price.toFixed(2) }}</p>
           <div class="quantity-controls">
-            <button class="quantity-button" @click="decreaseQuantity(item.productId)">−</button>
+            <button class="quantity-button" @click="decreaseQuantity(item.id)">−</button>
             <span class="quantity">{{ item.quantity }}</span>
-            <button class="quantity-button" @click="increaseQuantity(item.productId)">+</button>
-            <button class="remove"  @click="removeFromCart(item.productId)">Remove</button>
+            <button class="quantity-button" @click="increaseQuantity(item.id)">+</button>
+            <button class="remove"  @click="removeFromCart(item.id)">Remove</button>
           </div>
         </div>
       </div>
@@ -50,6 +53,14 @@ export default {
       default: 0,
     },
   },
+  data() {
+    return {
+      notification: {
+        message: "",
+        type: "",
+      },
+    };
+  },
   computed: {
     totalPrice() {
       return this.cartItems.reduce(
@@ -60,14 +71,18 @@ export default {
   },
   methods: {
     increaseQuantity(productId) {
-      const item = this.cartItems.find((item) => item.productId === productId);
+      console.log("Increase Quantity for:", productId);
+      const item = this.cartItems.find((item) => item.id === productId);
       if (item) {
         item.quantity++;
+        console.log("Updated item quantity:", item);
+      } else {
+        console.warn("Product not found for increaseQuantity:", productId);
       }
     },
     decreaseQuantity(productId) {
       const index = this.cartItems.findIndex(
-          (item) => item.productId === productId
+          (item) => item.id === productId
       );
       if (index !== -1) {
         if (this.cartItems[index].quantity > 1) {
@@ -79,7 +94,7 @@ export default {
     },
     removeFromCart(productId){
       const index = this.cartItems.findIndex(
-          (item) => item.productId === productId
+          (item) => item.id === productId
       );
       if (index !== -1) {
         if (this.cartItems[index].quantity >= 1) {
@@ -88,6 +103,17 @@ export default {
       }
 
     },
+    showNotification(message, type) {
+      this.notification.message = message;
+      this.notification.type = type;
+
+      // Verberg de melding na 3 seconden
+      setTimeout(() => {
+        this.notification.message = "";
+        this.notification.type = "";
+      }, 3000);
+    },
+
     async checkout() {
       try {
         // Maak een lijst van OrderItemsDTO
@@ -95,19 +121,18 @@ export default {
           productId: item.id,
           quantity: item.quantity,
           unitPrice: item.price,
+          status: "Pending",
         }));
-        const response = await orderService.checkout(1,orderItemsDto);
-
-        alert("Order placed successfully!");
-        console.log("Response:", response);
-        //this.cartItems = null;
-
+        await orderService.checkout(1,orderItemsDto);
+        this.showNotification("Order placed successfully!", "success");
+        setTimeout(() => {
+          this.cartItems.splice(0, this.cartItems.length);
+        }, 2000);
       } catch (error) {
-        console.error("Error placing order:", error);
-        if (error.response && error.response.data) {
-          alert(`Error: ${error.response.data.title || "Failed to place order"}`);
-          console.log("Backend errors:", error.response.data.errors);
-        }
+        const errorMessage =
+            (error.response && error.response.data.title) || "Failed to place order";
+        this.showNotification(`Error: ${errorMessage}`, "error");
+        console.log("Backend errors:", error.response.data.errors);
       }
     },
 
@@ -119,6 +144,26 @@ export default {
 </script>
 
 <style scoped>
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1.2em;
+  color: #fff;
+  text-align: center;
+  z-index: 1000;
+}
+
+.notification.success {
+  background-color: #28a745; /* Groen voor succes */
+}
+
+.notification.error {
+  background-color: #dc3545; /* Rood voor foutmeldingen */
+}
 /* Algemene container */
 .order-page {
   width: 100%;
@@ -226,7 +271,6 @@ h1 {
 .order-summary {
   margin-top: 20px;
   padding-top: 10px;
-  border-top: 1px solid #444;
   text-align: center;
 }
 

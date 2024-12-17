@@ -5,7 +5,6 @@
         v-if="!isOrderPage"
         :cart-items="cartItems"
         :current-language="currentLanguage"
-        @remove-from-cart="removeFromCart"
         @navigate-to-order="goToOrderPage"
         @switch-language="switchLanguage"
     />

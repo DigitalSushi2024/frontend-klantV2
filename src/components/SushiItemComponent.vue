@@ -9,7 +9,6 @@
 
     <!-- Product list -->
     <ProductListComponent
-      :title="subcategory.name"
       :products="filteredProducts"
       :loading="loading"
       :error="error"

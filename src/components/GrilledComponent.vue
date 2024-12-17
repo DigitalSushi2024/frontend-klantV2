@@ -1,6 +1,8 @@
 <template>
   <div>
     <div v-for="subcategory in subcategories" :key="subcategory.id">
+      <br>
+      <h2> {{ subcategory.name }}</h2>
       <SubCategoryComponent
           :subcategory="subcategory"
           :filtered-products="subcategory.filteredProducts"
