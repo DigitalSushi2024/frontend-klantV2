@@ -8,9 +8,12 @@
       <button class="back-button" @click="goBack">← Back</button>
       <h1>Order Summary</h1>
     </div>
-
-    <!-- Order items list -->
     <div class="order-items">
+      <div v-if="cartItems.length <= 0" class="empty-message">
+        <p>Your cart is empty. Please choose a product to continue!</p>
+        <button class="back-button" @click="goBack">Go to Products</button>
+      </div>
+      <!-- Order items list -->
       <div v-for="item in cartItems" :key="item.id" class="order-item">
         <img :src="`${item.imageUrl}`" :alt="item.name" class="item-image" />
         <div class="item-details">
@@ -59,6 +62,7 @@ export default {
         message: "",
         type: "",
       },
+      emptyMessage: "",
     };
   },
   computed: {
@@ -70,6 +74,9 @@ export default {
     },
   },
   methods: {
+    showEmptyMessage(){
+      this.emptyMessage = "your cart is empty";
+    },
     increaseQuantity(productId) {
       console.log("Increase Quantity for:", productId);
       const item = this.cartItems.find((item) => item.id === productId);
@@ -127,11 +134,12 @@ export default {
         this.showNotification("Order placed successfully!", "success");
         setTimeout(() => {
           this.cartItems.splice(0, this.cartItems.length);
+          this.goBack();
         }, 2000);
       } catch (error) {
         const errorMessage =
             (error.response && error.response.data.title) || "Failed to place order";
-        this.showNotification(`Error: ${errorMessage}`, "error");
+        this.showNotification(`${errorMessage}`, "error");
         console.log("Backend errors:", error.response.data.errors);
       }
     },
@@ -144,6 +152,12 @@ export default {
 </script>
 
 <style scoped>
+.empty-message {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2em;
+  color: #ff6b6b; /* Roodtint voor waarschuwing */
+}
 .notification {
   position: fixed;
   top: 20px;

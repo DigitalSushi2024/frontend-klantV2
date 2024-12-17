@@ -63,6 +63,12 @@ export default {
 
 <style scoped>
 .product-list {
+  display: flex;             /* Maak de container een flexbox */
+  flex-wrap: wrap;           /* Laat items op meerdere lijnen staan */
+  justify-content: center;   /* Centreer de items horizontaal */
+  align-items: center;       /* Centreer de items verticaal */
+  gap: 20px;                 /* Ruimte tussen de items */
+  padding: 20px;
   text-align: center;
   color: white;
 }
@@ -72,6 +78,7 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
   gap: 1em;
+
 }
 
 .product-item {

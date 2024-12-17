@@ -1,5 +1,5 @@
 <template>
-  <p class="category-title">{{ translations[currentLanguage].categoriesTitle }}</p>
+<!--  <p class="category-title">{{ translations[currentLanguage].categoriesTitle }}</p>-->
   <div class="categories">
     <button
         class="category-btn"
@@ -24,7 +24,13 @@ export default {
     return {
       currentLanguage: "en", // Default language
       categories: [
-        {id: 1, name: "Sushi", image: sushiImage},
+        {id: 1,
+          name: "Sushi",
+          image: sushiImage,
+          subcategories: [
+              {name: "Maki",  id: 1}
+              ]
+        },
         {id: 2, name: "Grill", image: grillImage},
         {id: 3, name: "Side Dishes", image: dishImage},
         {id: 4, name: "Drinks", image: drinkImage}
@@ -76,6 +82,44 @@ export default {
 </script>
 
 <style scoped>
+.categories {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 3em 0em;
+  overflow-y: hidden;
+  overflow-x: auto;
+  font-family: "Roboto", sans-serif;
+}
+
+.category-btn {
+  background-color: #0000;
+  color: white;
+  border-color: #E74C3C;
+  padding: 1em 1em;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  transition: background-color 0.3s ease;
+  height: 4em;
+  margin-left: 1em;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.category-btn:hover {
+  background-color: #E74C3C;
+}
+
+.category-btn:hover .category-image {
+  filter: invert(100%) sepia(2%) saturate(0%) hue-rotate(33deg) brightness(110%) contrast(1100%);
+}
+
+.category-image {
+  width: 2em;
+  height: 2em;
+  object-fit: cover;
+}
 @media only screen and (max-width: 769px) {
   .categories {
     display: flex;
@@ -156,4 +200,5 @@ export default {
     filter: invert(100%) sepia(2%) saturate(0%) hue-rotate(33deg) brightness(110%) contrast(1100%);
   }
 }
+
 </style>

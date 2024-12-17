@@ -1,12 +1,11 @@
 <template>
   <div>
-    <h2>Sushi Categories</h2>
     <div v-if="state.loading">Loading...</div>
     <div v-if="state.error">{{ state.error }}</div>
 
     <div v-for="subcategory in state.subcategories" :key="subcategory.id">
       <br>
-      <h2>{{ subcategory.name }}</h2>
+      <h2 class="title">{{ subcategory.name }}</h2>
       <ProductListComponent
           :products="subcategory.filteredProducts"
           :loading="state.loading"
@@ -31,7 +30,6 @@ export default {
   },
   methods: {
     handleAddToCart(product) {
-      console.log("Product toegevoegd vanuit SushiComponent:", product);
       this.$emit("add-to-cart", product);
     },
   },
@@ -83,16 +81,12 @@ export default {
 </script>
 
 <style scoped>
-.product-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.product-item {
-  width: 20%;
-  text-align: center;
+.title{
+  display: flex;             /* Maak de container een flexbox */
+  flex-wrap: wrap;           /* Laat items op meerdere lijnen staan */
+  justify-content: center;   /* Centreer de items horizontaal */
+  align-items: center;       /* Centreer de items verticaal */
+  padding: 10px;             /* Voeg ruimte toe aan de container */
 }
 
 .category-buttons button {

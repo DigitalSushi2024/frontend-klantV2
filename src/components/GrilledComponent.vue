@@ -2,7 +2,7 @@
   <div>
     <div v-for="subcategory in subcategories" :key="subcategory.id">
       <br>
-      <h2> {{ subcategory.name }}</h2>
+      <h2 class="title"> {{ subcategory.name }}</h2>
       <SubCategoryComponent
           :subcategory="subcategory"
           :filtered-products="subcategory.filteredProducts"
@@ -24,7 +24,6 @@ export default {
   },
   methods: {
     handleAddToCart(product) {
-      console.log("Product toegevoegd vanuit grilled", product);
       this.$emit("add-to-cart", product);
     },
   },
@@ -45,7 +44,6 @@ export default {
         for (const subcategory of state.subcategories) {
           const response = await productService.getProductsBySubCategory(subcategory.id);
           const allProducts = response.$values || response;
-          console.log(`Fetched products for ${subcategory.name}:`, allProducts);
 
           if (allProducts && Array.isArray(allProducts)) {
             subcategory.filteredProducts = allProducts.map(product => ({
@@ -60,7 +58,6 @@ export default {
         }
       } catch (err) {
         state.error = `Failed to fetch products for subcategories`;
-        console.error(`Error fetching products for subcategories:`, err);
       } finally {
         state.loading = false;
       }
@@ -77,4 +74,11 @@ export default {
 </script>
 
 <style scoped>
+.title{
+  display: flex;             /* Maak de container een flexbox */
+  flex-wrap: wrap;           /* Laat items op meerdere lijnen staan */
+  justify-content: center;   /* Centreer de items horizontaal */
+  align-items: center;       /* Centreer de items verticaal */
+  padding: 10px;             /* Voeg ruimte toe aan de container */
+}
 </style>

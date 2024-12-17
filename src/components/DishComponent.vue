@@ -2,7 +2,7 @@
   <div>
     <div v-for="subcategory in subcategories" :key="subcategory.id">
       <br>
-      <h2> {{ subcategory.name }}</h2>
+      <h2 class="title"> {{ subcategory.name }}</h2>
       <SubCategoryComponent
           :subcategory="subcategory"
           :filtered-products="subcategory.filteredProducts"
@@ -24,7 +24,6 @@ export default {
   },
   methods: {
     handleAddToCart(product) {
-      console.log("Product toegevoegd vanuit dish", product);
       this.$emit("add-to-cart", product);
     },
   },
@@ -74,4 +73,11 @@ export default {
 </script>
 
 <style scoped>
+.title{
+  display: flex;             /* Maak de container een flexbox */
+  flex-wrap: wrap;           /* Laat items op meerdere lijnen staan */
+  justify-content: center;   /* Centreer de items horizontaal */
+  align-items: center;       /* Centreer de items verticaal */
+  padding: 10px;             /* Voeg ruimte toe aan de container */
+}
 </style>
