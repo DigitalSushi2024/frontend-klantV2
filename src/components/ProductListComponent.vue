@@ -8,7 +8,7 @@
         <img :src="`${product.productImage}`" :alt="product.productName" class="product-image" />
         <h3>{{ product.productName }}</h3>
         <p>€{{ product.price.toFixed(2) }}</p>
-        <button class="add-to-cart-btn" @click="addToCart(product)">Add to Cart</button>
+        <button class="add-to-cart-btn" @click="addToCart(product)">{{ translations[currentLanguage].addToCart }}</button>
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@
  * @property {number} category
  * @property {number} price
  */
-  export default {
+export default {
   props: {
     title: {
       type: String,
@@ -44,10 +44,25 @@
     error: {
       type: String,
       default: null
+    },
+    currentLanguage: {
+      type: String,
+      default: "en"
     }
   },
+  data() {
+    return {
+      translations: {
+        en: {
+          addToCart: "Add to Cart"
+        },
+        nl: {
+          addToCart: "Voeg toe aan winkelwagen"
+        }
+      }
+    };
+  },
   methods: {
-
     addToCart(product) {
       this.$emit('add-to-cart', product);
     }
@@ -56,7 +71,6 @@
 </script>
 
 <style scoped>
-
 .product-list {
   text-align: center;
   color: white;

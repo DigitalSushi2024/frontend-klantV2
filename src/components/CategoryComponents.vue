@@ -20,6 +20,7 @@ import dishImage from '@/assets/images/dish.png';
 import drinkImage from '@/assets/images/poinsettia.png';
 
 export default {
+  emits: ['category-selected'], // Declare the custom event
   data() {
     return {
       currentLanguage: "en", // Default language

@@ -1,17 +1,17 @@
 <template>
   <div v-if="!isOrderPage" class="black-container">
-    <CategoryComponents @category-selected="handleCategorySelection" />
+    <CategoryComponents @category-selected="handleCategorySelection" :currentLanguage="currentLanguage" />
     <div v-if="selectedCategory === 'sushi'">
-      <SushiComponent @add-to-cart="addToCart" />
+      <SushiComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
     </div>
     <div v-else-if="selectedCategory === 'grill'">
-      <GrilledComponent @add-to-cart="addToCart" />
+      <GrilledComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
     </div>
     <div v-else-if="selectedCategory === 'sideDishes'">
-      <DishComponent @add-to-cart="addToCart" />
+      <DishComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
     </div>
     <div v-else-if="selectedCategory === 'drinks'">
-      <DrinkComponent @add-to-cart="addToCart" />
+      <DrinkComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
     </div>
   </div>
 </template>
@@ -30,6 +30,12 @@ export default {
     DrinkComponent,
     GrilledComponent,
     DishComponent
+  },
+  props: {
+    currentLanguage: {
+      type: String,
+      default: "en"
+    }
   },
   data() {
     return {
