@@ -1,9 +1,9 @@
 <template>
   <div class="order-page">
-    <!-- Header met de terugknop -->
+    <!-- Header with the back button -->
     <div class="header">
-      <button class="back-button" @click="goBack">← Back</button>
-      <h1>Order Summary</h1>
+      <button class="back-button" @click="goBack">{{ translations[currentLanguage].backButton }}</button>
+      <h1>{{ translations[currentLanguage].orderSummary }}</h1>
     </div>
 
     <!-- Order items list -->
@@ -12,17 +12,17 @@
         <img :src="`/${item.productImage}`" :alt="item.productName" class="item-image" />
         <div class="item-details">
           <h3>{{ item.productName }}</h3>
-          <p>Quantity: {{ item.quantity }}</p>
-          <p>Price: €{{ (item.price * item.quantity).toFixed(2) }}</p>
+          <p>{{ translations[currentLanguage].quantity }}: {{ item.quantity }}</p>
+          <p>{{ translations[currentLanguage].price }}: €{{ (item.price * item.quantity).toFixed(2) }}</p>
         </div>
-        <button class="remove-button" @click="removeFromOrder(item.productId)">Remove</button>
+        <button class="remove-button" @click="removeFromOrder(item.productId)">{{ translations[currentLanguage].removeButton }}</button>
       </div>
     </div>
 
     <!-- Order total -->
     <div class="order-summary">
-      <h2>Total: €{{ totalPrice.toFixed(2) }}</h2>
-      <button class="checkout-button" @click="checkout">Proceed to Checkout</button>
+      <h2>{{ translations[currentLanguage].total }}: €{{ totalPrice.toFixed(2) }}</h2>
+      <button class="checkout-button" @click="checkout">{{ translations[currentLanguage].checkoutButton }}</button>
     </div>
   </div>
 </template>
@@ -35,12 +35,40 @@ export default {
       type: Array,
       default: () => [],
     },
+    currentLanguage: {
+      type: String,
+      default: "en",
+    },
+  },
+  data() {
+    return {
+      translations: {
+        en: {
+          backButton: "← Back",
+          orderSummary: "Order Summary",
+          quantity: "Quantity",
+          price: "Price",
+          removeButton: "Remove",
+          total: "Total",
+          checkoutButton: "Proceed to Checkout",
+        },
+        nl: {
+          backButton: "← Terug",
+          orderSummary: "Bestelling Overzicht",
+          quantity: "Aantal",
+          price: "Prijs",
+          removeButton: "Verwijderen",
+          total: "Totaal",
+          checkoutButton: "Ga naar Afrekenen",
+        },
+      },
+    };
   },
   computed: {
     totalPrice() {
       return this.cartItems.reduce(
-          (total, item) => total + item.price * item.quantity,
-          0
+        (total, item) => total + item.price * item.quantity,
+        0
       );
     },
   },
@@ -48,11 +76,11 @@ export default {
     removeFromOrder(productId) {
       this.$emit("remove-from-cart", productId); // Emit event to remove item from cart
     },
-    checkout() {
-      alert("Proceeding to checkout!");
-    },
     goBack() {
-      this.$router.push("/"); // Navigeer terug naar de homepagina
+      this.$router.go(-1); // Navigate back to the previous page
+    },
+    checkout() {
+      this.$router.push({ name: "Checkout" }); // Navigate to the checkout page
     },
   },
 };
