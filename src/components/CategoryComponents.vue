@@ -24,10 +24,10 @@ export default {
     return {
       currentLanguage: "en", // Default language
       categories: [
-        { id: 1, name: "Sushi", image: sushiImage },
-        { id: 2, name: "Grill", image: grillImage },
-        { id: 3, name: "Side Dishes", image: dishImage },
-        { id: 4, name: "Drinks", image: drinkImage }
+        { id: 1, key: "sushi", image: sushiImage },
+        { id: 2, key: "grill", image: grillImage },
+        { id: 3, key: "sideDishes", image: dishImage },
+        { id: 4, key: "drinks", image: drinkImage }
       ],
       translations: {
         en: {
@@ -53,15 +53,15 @@ export default {
   },
   methods: {
     selectCategory(category) {
-      this.$emit('category-selected', category.name);
+      this.$emit('category-selected', category.key); // Emit the category key
+      this.$router.push({ name: category.key }); // Navigate to the route named after the category key
     },
     switchLanguage(language) {
       this.currentLanguage = language;  // Updates the language dynamically
       localStorage.setItem("preferredLanguage", language);  // Save language preference
     },
     getTranslatedCategoryName(category) {
-      const categoryKey = category.name.toLowerCase().replace(/\s/g, '');
-      return this.translations[this.currentLanguage].categories[categoryKey] || category.name;
+      return this.translations[this.currentLanguage].categories[category.key] || category.key;
     }
   },
   watch: {
