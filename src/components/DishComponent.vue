@@ -1,9 +1,11 @@
 <template>
   <ProductListTemplate
-      title="Side Dishes"
-      :products="products"
-      :loading="loading"
-      :error="error"
+    title="Side Dishes"
+    :products="displayedProducts"
+    :loading="loading"
+    :error="error"
+    :currentLanguage="currentLanguage"
+    @add-to-cart="addToCart"
   />
 </template>
 
@@ -15,12 +17,26 @@ export default {
   components: {
     ProductListTemplate
   },
+  props: {
+    currentLanguage: {
+      type: String,
+      default: "en"
+    }
+  },
   data() {
     return {
       products: [],
       loading: true,
       error: null
     };
+  },
+  computed: {
+    displayedProducts() {
+      return this.products.map(product => ({
+        ...product,
+        productName: this.currentLanguage === 'nl' ? product.productNameNL : product.productName
+      }));
+    }
   },
   mounted() {
     this.fetchSideDishes();
@@ -36,11 +52,14 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    addToCart(product) {
+      const originalProduct = this.products.find(p => p.productId === product.productId);
+      this.$emit('add-to-cart', originalProduct);
     }
   }
 };
 </script>
-
 
 <style scoped>
 
