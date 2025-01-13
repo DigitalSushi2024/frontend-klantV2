@@ -20,10 +20,15 @@ import dishImage from '@/assets/images/dish.png';
 import drinkImage from '@/assets/images/poinsettia.png';
 
 export default {
+  props: {
+    currentLanguage: {
+      type: String,
+      required: true
+    }
+  },
   emits: ['category-selected'], // Declare the custom event
   data() {
     return {
-      currentLanguage: "en", // Default language
       categories: [
         { id: 1, key: "sushi", image: sushiImage },
         { id: 2, key: "grill", image: grillImage },
@@ -57,24 +62,13 @@ export default {
       this.$emit('category-selected', category.key); // Emit the category key
       this.$router.push({ name: category.key }); // Navigate to the route named after the category key
     },
-    switchLanguage(language) {
-      this.currentLanguage = language;  // Updates the language dynamically
-      localStorage.setItem("preferredLanguage", language);  // Save language preference
-    },
     getTranslatedCategoryName(category) {
       return this.translations[this.currentLanguage].categories[category.key] || category.key;
     }
   },
   watch: {
-    // Watch for changes in the currentLanguage prop
     currentLanguage(newLanguage) {
       // When language changes, the UI will automatically re-render due to Vue's reactivity
-    }
-  },
-  created() {
-    const savedLanguage = localStorage.getItem("preferredLanguage");
-    if (savedLanguage) {
-      this.currentLanguage = savedLanguage;
     }
   }
 };
