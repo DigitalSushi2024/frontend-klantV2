@@ -1,39 +1,37 @@
 <template>
   <div class="product-list">
     <h2>{{ title }}</h2>
-    <div v-if="loading" class="loading">Loading...</div>
+    <div v-if="loading">Loading...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else>
-      <div class="product-container">
-        <div v-for="product in products" :key="product.productId" class="product-item">
-          <img
-              :src="product.imageUrl || defaultImage"
-              :alt="product.name"
-              class="product-image"
-          />
-          <h3>{{ product.name }}</h3>
-          <p>€{{ product.price.toFixed(2) }}</p>
-          <button
-              class="add-to-cart-btn"
-              @click="addToCart(product)"
-              aria-label="Add to Cart"
-          >
-            Add to Cart
-          </button>
-        </div>
+      <div v-for="product in products" :key="product.productId" class="product-item">
+        <img :src="`${product.productImage}`" :alt="product.productName" class="product-image" />
+        <h3>{{ product.productName }}</h3>
+        <p>€{{ product.price.toFixed(2) }}</p>
+        <button class="add-to-cart-btn" @click="addToCart(product)">{{ translations[currentLanguage].addToCart }}</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
+/**
+ * @typedef {Object} Product
+ * @property {number} productId
+ * @property {string} productName
+ * @property {string} productImage
+ * @property {number} category
+ * @property {number} price
+ */
 export default {
   props: {
     title: {
       type: String,
-      required: false
+      required: true
     },
+    /**
+     * @type {Product[]}
+     */
     products: {
       type: Array,
       required: true,
@@ -46,65 +44,61 @@ export default {
     error: {
       type: String,
       default: null
+    },
+    currentLanguage: {
+      type: String,
+      default: "en"
     }
+  },
+  data() {
+    return {
+      translations: {
+        en: {
+          addToCart: "Add to Cart"
+        },
+        nl: {
+          addToCart: "Voeg toe aan winkelwagen"
+        }
+      }
+    };
   },
   methods: {
     addToCart(product) {
       this.$emit('add-to-cart', product);
     }
-  },
-  data() {
-    return {
-      defaultImage: 'default-image-path.jpg'
-    };
   }
 };
 </script>
 
 <style scoped>
 .product-list {
-  display: flex;             /* Maak de container een flexbox */
-  flex-wrap: wrap;           /* Laat items op meerdere lijnen staan */
-  justify-content: center;   /* Centreer de items horizontaal */
-  align-items: center;       /* Centreer de items verticaal */
-  gap: 20px;                 /* Ruimte tussen de items */
-  padding: 20px;
   text-align: center;
   color: white;
 }
 
-.product-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1em;
-
-}
-
 .product-item {
+  margin-top: 2em;
   background-color: #302D2F;
   display: inline-block;
   width: 9em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
   text-align: center;
   border-radius: 21px;
   font-family: "Roboto", sans-serif;
-  padding: 1em;
-  box-sizing: border-box;
-  transition: transform 0.3s ease-in-out;
+  padding-top: -1em;
 }
-
 .product-item:hover {
   background-color: #181818;
-  transform: scale(1.05);
 }
 
 .product-image {
-  width: 90%;
+  width: 95%;
   height: auto;
   object-fit: cover;
   border-radius: 10px;
+  margin-top: -3em;
 }
-
 .add-to-cart-btn {
   background-color: #28a745;
   color: white;
@@ -122,11 +116,5 @@ export default {
 
 .error {
   color: red;
-}
-
-.loading {
-  color: #fff;
-  font-size: 1.2em;
-  font-weight: bold;
 }
 </style>

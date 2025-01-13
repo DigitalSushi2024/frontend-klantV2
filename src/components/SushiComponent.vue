@@ -1,92 +1,71 @@
 <template>
-  <div>
-    <div v-if="state.loading">Loading...</div>
-    <div v-if="state.error">{{ state.error }}</div>
-
-    <div v-for="subcategory in state.subcategories" :key="subcategory.id">
-      <br>
-      <h2 class="title">{{ subcategory.name }}</h2>
-      <ProductListComponent
-          :products="subcategory.filteredProducts"
-          :loading="state.loading"
-          :error="state.error"
-          @add-to-cart="handleAddToCart"
-      />
-    </div>
-  </div>
+  <ProductListTemplate
+      title="Sushi"
+      :products="displayedProducts"
+      :loading="loading"
+      :error="error"
+      :currentLanguage="currentLanguage"
+      @add-to-cart="addToCart"
+  />
 </template>
 
-
 <script>
-import { reactive, onMounted } from 'vue';
-import SubCategoryComponent from "@/components/SubCategoryComponent.vue";
-import ProductListComponent from "@/components/ProductListComponent.vue"; // Ensure this import
-import productService from "@/Service/ProductService";
+import ProductListTemplate from "@/components/ProductListComponent.vue";
+import productService from '@/Service/ProductService';
 
 export default {
   components: {
-    SubCategoryComponent,
-    ProductListComponent, // Ensure this registration
+    ProductListTemplate
+  },
+  props: {
+    currentLanguage: {
+      type: String,
+      default: "en"
+    }
+  },
+  data() {
+    return {
+      products: [],
+      loading: true,
+      error: null
+    };
+  },
+  computed: {
+    displayedProducts() {
+      return this.products.map(product => ({
+        ...product,
+        productName: this.currentLanguage === 'nl' ? product.productNameNL : product.productName
+      }));
+    }
+  },
+  mounted() {
+    this.fetchSushiProducts();
   },
   methods: {
-    handleAddToCart(product) {
-      this.$emit("add-to-cart", product);
-    },
-  },
-  setup() {
-    const state = reactive({
-      loading: true,
-      error: null,
-      subcategories: [
-        { id: 1, name: "Maki", filteredProducts: [] },
-        { id: 2, name: "Nigiri", filteredProducts: [] },
-        { id: 3, name: "Sashimi", filteredProducts: [] },
-        { id: 4, name: "Temaki", filteredProducts: [] },
-      ],
-    });
-
-    const fetchSushiProducts = async () => {
-      state.loading = true;
+    async fetchSushiProducts() {
       try {
-        for (const subcategory of state.subcategories) {
-          const response = await productService.getProductsBySubCategory(subcategory.id);
-          const allProducts = response.$values || response;
-
-          if (allProducts && Array.isArray(allProducts)) {
-            subcategory.filteredProducts = allProducts.map(product => ({
-              id: product.productId,
-              name: product.productName,
-              price: product.price,
-              imageUrl: product.productImage || 'default-image-path.jpg', // Ensure imageUrl is set
-            }));
-          } else {
-            state.error = `No products found for subcategory ${subcategory.name}`;
-          }
-        }
+        const allProducts = await productService.getAllProducts();
+        this.products = allProducts.filter(product => product.category === 1);
       } catch (err) {
-        state.error = `Failed to fetch products for subcategories`;
+        this.error = 'Fout bij het ophalen van de sushi producten.';
+        console.error("Error fetching sushi products:", err);
       } finally {
-        state.loading = false;
+        this.loading = false;
       }
-    };
-    fetchSushiProducts();
-
-
-    return {
-      state,
-      fetchSushiProducts
-    };
-  },
+    },
+    addToCart(product) {
+      const originalProduct = this.products.find(p => p.productId === product.productId);
+      this.$emit('add-to-cart', originalProduct);
+    }
+  }
 };
 </script>
 
 <style scoped>
-.title{
-  display: flex;             /* Maak de container een flexbox */
-  flex-wrap: wrap;           /* Laat items op meerdere lijnen staan */
-  justify-content: center;   /* Centreer de items horizontaal */
-  align-items: center;       /* Centreer de items verticaal */
-  padding: 10px;             /* Voeg ruimte toe aan de container */
+.category-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .category-buttons button {
@@ -111,3 +90,6 @@ export default {
   border-radius: 10px;
 }
 </style>
+
+
+

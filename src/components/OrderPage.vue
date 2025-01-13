@@ -1,68 +1,71 @@
 <template>
-  <div v-if="notification.message" :class="['notification', notification.type]">
-    {{ notification.message }}
-  </div>
   <div class="order-page">
-    <!-- Header met de terugknop -->
+    <!-- Header with the back button -->
     <div class="header">
-      <button class="back-button" @click="goBack">← Back</button>
-      <h1>Order Summary</h1>
+      <button class="back-button" @click="goBack">{{ translations[currentLanguage].backButton }}</button>
+      <h1>{{ translations[currentLanguage].orderSummary }}</h1>
     </div>
+
+    <!-- Order items list -->
     <div class="order-items">
-      <div v-if="cartItems.length <= 0" class="empty-message">
-        <p>Your cart is empty. Please choose a product to continue!</p>
-        <button class="back-button" @click="goBack">Go to Products</button>
-      </div>
-      <!-- Order items list -->
-      <div v-for="item in cartItems" :key="item.id" class="order-item">
-        <img :src="`${item.imageUrl}`" :alt="item.name" class="item-image" />
+      <div v-for="item in cartItems" :key="item.productId" class="order-item">
+        <img :src="`/${item.productImage}`" :alt="item.productName" class="item-image" />
         <div class="item-details">
-          <h3>{{ item.name }}</h3>
-          <p>Price: €{{ item.price.toFixed(2) }}</p>
-          <div class="quantity-controls">
-            <button class="quantity-button" @click="decreaseQuantity(item.id)">−</button>
-            <span class="quantity">{{ item.quantity }}</span>
-            <button class="quantity-button" @click="increaseQuantity(item.id)">+</button>
-            <button class="remove"  @click="removeFromCart(item.id)">Remove</button>
-          </div>
+          <h3>{{ item.productName }}</h3>
+          <p>{{ translations[currentLanguage].quantity }}: {{ item.quantity }}</p>
+          <p>{{ translations[currentLanguage].price }}: €{{ (item.price * item.quantity).toFixed(2) }}</p>
         </div>
+        <button class="remove-button" @click="removeFromOrder(item.productId)">{{ translations[currentLanguage].removeButton }}</button>
       </div>
     </div>
 
     <!-- Order total -->
     <div class="order-summary">
-      <h2>Total: €{{ totalPrice.toFixed(2) }}</h2>
-      <button class="checkout-button" @click="checkout">Proceed to Checkout</button>
+      <h2>{{ translations[currentLanguage].total }}: €{{ totalPrice.toFixed(2) }}</h2>
+      <button class="checkout-button" @click="checkout">{{ translations[currentLanguage].checkoutButton }}</button>
     </div>
   </div>
 </template>
 
+<!--//TODO: send orders with original english product names-->
+<!--//TODO: error fix to send order to kitchen etc.-->
+<!--//TODO: error fix when item is deleted from order-->
 
 <script>
-import orderService from "@/Service/OrderService.js";
-
 export default {
-  path: '/order',
   name: "OrderPage",
-  props:
-      {
+  props: {
     cartItems: {
       type: Array,
       default: () => [],
     },
-    sessionId: {
-      type: Number,
-      required: true,
-      default: 0,
+    currentLanguage: {
+      type: String,
+      default: "en",
     },
   },
   data() {
     return {
-      notification: {
-        message: "",
-        type: "",
+      translations: {
+        en: {
+          backButton: "← Back",
+          orderSummary: "Order Summary",
+          quantity: "Quantity",
+          price: "Price",
+          removeButton: "Remove",
+          total: "Total",
+          checkoutButton: "Proceed to Checkout",
+        },
+        nl: {
+          backButton: "← Terug",
+          orderSummary: "Bestelling Overzicht",
+          quantity: "Aantal",
+          price: "Prijs",
+          removeButton: "Verwijderen",
+          total: "Totaal",
+          checkoutButton: "Ga naar Afrekenen",
+        },
       },
-      emptyMessage: "",
     };
   },
   computed: {
@@ -74,113 +77,23 @@ export default {
     },
   },
   methods: {
-    showEmptyMessage(){
-      this.emptyMessage = "your cart is empty";
+    removeFromOrder(productId) {
+      this.$emit("remove-from-cart", productId); // Emit event to remove item from cart
     },
-    increaseQuantity(productId) {
-      console.log("Increase Quantity for:", productId);
-      const item = this.cartItems.find((item) => item.id === productId);
-      if (item) {
-        item.quantity++;
-        console.log("Updated item quantity:", item);
-      } else {
-        console.warn("Product not found for increaseQuantity:", productId);
-      }
-    },
-    decreaseQuantity(productId) {
-      const index = this.cartItems.findIndex(
-          (item) => item.id === productId
-      );
-      if (index !== -1) {
-        if (this.cartItems[index].quantity > 1) {
-          this.cartItems[index].quantity--;
-        } else {
-          this.cartItems.splice(index, 1); // Verwijder het item als de hoeveelheid 1 is
-        }
-      }
-    },
-    removeFromCart(productId){
-      const index = this.cartItems.findIndex(
-          (item) => item.id === productId
-      );
-      if (index !== -1) {
-        if (this.cartItems[index].quantity >= 1) {
-          this.cartItems.splice(index, 1);
-        }
-      }
-
-    },
-    showNotification(message, type) {
-      this.notification.message = message;
-      this.notification.type = type;
-
-      // Verberg de melding na 3 seconden
-      setTimeout(() => {
-        this.notification.message = "";
-        this.notification.type = "";
-      }, 3000);
-    },
-
-    async checkout() {
-      try {
-        // Maak een lijst van OrderItemsDTO
-        const orderItemsDto = this.cartItems.map(item => ({
-          productId: item.id,
-          quantity: item.quantity,
-          unitPrice: item.price,
-          status: "Pending",
-        }));
-        await orderService.checkout(1,orderItemsDto);
-        this.showNotification("Order placed successfully!", "success");
-        setTimeout(() => {
-          this.cartItems.splice(0, this.cartItems.length);
-          this.goBack();
-        }, 2000);
-      } catch (error) {
-        const errorMessage =
-            (error.response && error.response.data.title) || "Failed to place order";
-        this.showNotification(`${errorMessage}`, "error");
-        console.log("Backend errors:", error.response.data.errors);
-      }
-    },
-
     goBack() {
-      this.$router.push("/");
+      this.$router.go(-1); // Navigate back to the previous page
+    },
+    checkout() {
+      this.$router.push({ name: "Checkout" }); // Navigate to the checkout page
     },
   },
 };
 </script>
 
 <style scoped>
-.empty-message {
-  text-align: center;
-  padding: 20px;
-  font-size: 1.2em;
-  color: #ff6b6b; /* Roodtint voor waarschuwing */
-}
-.notification {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 1.2em;
-  color: #fff;
-  text-align: center;
-  z-index: 1000;
-}
-
-.notification.success {
-  background-color: #28a745; /* Groen voor succes */
-}
-
-.notification.error {
-  background-color: #dc3545; /* Rood voor foutmeldingen */
-}
 /* Algemene container */
 .order-page {
-  width: 100%;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -256,35 +169,24 @@ h1 {
   color: #bbb;
 }
 
-.quantity-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.quantity {
-  font-size: 1.2em;
-  color: white;
-}
-
-.quantity-button {
-  background-color: #333;
+.remove-button {
+  background-color: #e74c3c;
   color: white;
   border: none;
   padding: 5px 10px;
-  font-size: 1.2em;
-  border-radius: 5px;
+  border-radius: 3px;
   cursor: pointer;
 }
 
-.quantity-button:hover {
-  background-color: #555;
+.remove-button:hover {
+  background-color: #c0392b;
 }
 
 /* Samenvatting van de bestelling */
 .order-summary {
   margin-top: 20px;
   padding-top: 10px;
+  border-top: 1px solid #444;
   text-align: center;
 }
 
@@ -305,21 +207,5 @@ h2 {
 
 .checkout-button:hover {
   background-color: #219150;
-}
-.remove {
-  background-color: #e74c3c; /* Fel rood */
-  color: white; /* Witte tekst */
-  border: none; /* Geen rand */
-  padding: 8px 12px; /* Ruimte binnen de knop */
-  font-size: 0.9em; /* Tekstgrootte */
-  font-weight: bold; /* Maak de tekst vet */
-  border-radius: 5px; /* Rond de hoeken */
-  cursor: pointer; /* Toon een pointer-cursor bij hover */
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Voor animaties */
-}
-
-.remove:hover {
-  background-color: #c0392b; /* Donkerder rood bij hover */
-  transform: scale(1.05); /* Vergroot de knop iets bij hover */
 }
 </style>

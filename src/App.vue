@@ -1,12 +1,27 @@
 <template>
   <div class="app-container">
+    <!-- Language selector placed in App.vue -->
+    <div class="language-selecter">
+      <img
+          :src="netherlandsIcon"
+          alt="Dutch"
+          class="netherlandsIcon"
+          @click="switchLanguage('nl')"
+      />
+      <img
+          :src="englishIcon"
+          alt="English"
+          class="englishIcon"
+          @click="switchLanguage('en')"
+      />
+    </div>
+
     <!-- Show header based on current route -->
     <header-component
         v-if="!isOrderPage"
         :cart-items="cartItems"
         :current-language="currentLanguage"
         @navigate-to-order="goToOrderPage"
-        @switch-language="switchLanguage"
     />
     <order-header v-else :current-language="currentLanguage" />
 
@@ -16,6 +31,7 @@
         :current-language="currentLanguage"
         @add-to-cart="addToCart"
         @remove-from-cart="removeFromCart"
+        @language-changed="switchLanguage"
     />
   </div>
 </template>
@@ -23,6 +39,8 @@
 <script>
 import HeaderComponent from "@/components/headerComponents.vue";
 import OrderHeader from "@/components/OrderHeader.vue";
+import netherlandsIcon from "@/assets/images/netherlands.png";
+import englishIcon from "@/assets/images/english.png";
 
 export default {
   components: {
@@ -33,6 +51,8 @@ export default {
     return {
       cartItems: [], // Global cart items
       currentLanguage: "en", // Default language is English
+      netherlandsIcon,
+      englishIcon,
     };
   },
   computed: {
@@ -67,6 +87,7 @@ export default {
       localStorage.setItem("preferredLanguage", language);
     },
   },
+
   created() {
     const savedLanguage = localStorage.getItem("preferredLanguage");
     if (savedLanguage) {
@@ -79,15 +100,27 @@ export default {
 <style scoped>
 /* Your existing styles */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.language-selecter {
+  position: absolute;
+  margin-top: 0.3em;
+  margin-left: 1.2em;
+  z-index: 20;
 }
 
-html, body {
-  height: 100%;
-  width: 100%;
+.netherlandsIcon{
+  width: 1.8em;
+  height: auto;
+  border: 1px solid #373534;
+  border-radius: 100%;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  margin-right: 0.2em;
+}
+.englishIcon {
+  width: 1.8em;
+  height: auto;
+  border: 1px solid #373534;
+  border-radius: 100%;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .app-container {
@@ -96,7 +129,7 @@ html, body {
   font-family: Arial, sans-serif;
   background-color: #121212;
   color: white;
-  min-height: 100vh; /* Ensures container fills at least the screen height */
+  min-height: 100vh;
   width: 100%;
   box-sizing: border-box;
   display: flex;

@@ -1,5 +1,5 @@
 <template>
-<!--  <p class="category-title">{{ translations[currentLanguage].categoriesTitle }}</p>-->
+  <p class="category-title">{{ translations[currentLanguage].categoriesTitle }}</p>
   <div class="categories">
     <button
         class="category-btn"
@@ -8,7 +8,7 @@
         @click="selectCategory(category)"
     >
       <img :src="category.image" :alt="category.name" class="category-image" />
-      {{ getTranslatedCategoryName(category) }}
+      {{ getTranslatedCategoryName(category) }} <!-- Bind the computed translated name -->
     </button>
   </div>
 </template>
@@ -20,20 +20,20 @@ import dishImage from '@/assets/images/dish.png';
 import drinkImage from '@/assets/images/poinsettia.png';
 
 export default {
+  props: {
+    currentLanguage: {
+      type: String,
+      required: true
+    }
+  },
+  emits: ['category-selected'], // Declare the custom event
   data() {
     return {
-      currentLanguage: "en", // Default language
       categories: [
-        {id: 1,
-          name: "Sushi",
-          image: sushiImage,
-          subcategories: [
-              {name: "Maki",  id: 1}
-              ]
-        },
-        {id: 2, name: "Grill", image: grillImage},
-        {id: 3, name: "Side Dishes", image: dishImage},
-        {id: 4, name: "Drinks", image: drinkImage}
+        { id: 1, key: "sushi", image: sushiImage },
+        { id: 2, key: "grill", image: grillImage },
+        { id: 3, key: "sideDishes", image: dishImage },
+        { id: 4, key: "drinks", image: drinkImage }
       ],
       translations: {
         en: {
@@ -59,67 +59,22 @@ export default {
   },
   methods: {
     selectCategory(category) {
-      this.$emit('category-selected', category.name);
+      this.$emit('category-selected', category.key); // Emit the category key
+      this.$router.push({ name: category.key }); // Navigate to the route named after the category key
     },
-    // Switch language and store preference
-    switchLanguage(language) {
-      this.currentLanguage = language;
-      localStorage.setItem("preferredLanguage", language);
-    },
-    // Method to return translated category name
     getTranslatedCategoryName(category) {
-      const categoryKey = category.name.toLowerCase().replace(/\s/g, ''); // Normalize the category name to lowercase and remove spaces
-      return this.translations[this.currentLanguage].categories[categoryKey] || category.name;
+      return this.translations[this.currentLanguage].categories[category.key] || category.key;
     }
   },
-  created() {
-    const savedLanguage = localStorage.getItem("preferredLanguage");
-    if (savedLanguage) {
-      this.currentLanguage = savedLanguage;
+  watch: {
+    currentLanguage(newLanguage) {
+      // When language changes, the UI will automatically re-render due to Vue's reactivity
     }
   }
 };
 </script>
 
 <style scoped>
-.categories {
-  display: flex;
-  justify-content: space-evenly;
-  margin: 3em 0em;
-  overflow-y: hidden;
-  overflow-x: auto;
-  font-family: "Roboto", sans-serif;
-}
-
-.category-btn {
-  background-color: #0000;
-  color: white;
-  border-color: #E74C3C;
-  padding: 1em 1em;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  gap: 1em;
-  transition: background-color 0.3s ease;
-  height: 4em;
-  margin-left: 1em;
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-.category-btn:hover {
-  background-color: #E74C3C;
-}
-
-.category-btn:hover .category-image {
-  filter: invert(100%) sepia(2%) saturate(0%) hue-rotate(33deg) brightness(110%) contrast(1100%);
-}
-
-.category-image {
-  width: 2em;
-  height: 2em;
-  object-fit: cover;
-}
 @media only screen and (max-width: 769px) {
   .categories {
     display: flex;
@@ -200,5 +155,4 @@ export default {
     filter: invert(100%) sepia(2%) saturate(0%) hue-rotate(33deg) brightness(110%) contrast(1100%);
   }
 }
-
 </style>

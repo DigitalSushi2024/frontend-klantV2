@@ -1,83 +1,66 @@
 <template>
-  <div>
-    <div v-for="subcategory in subcategories" :key="subcategory.id">
-      <br>
-      <h2 class="title"> {{ subcategory.name }}</h2>
-      <SubCategoryComponent
-          :subcategory="subcategory"
-          :filtered-products="subcategory.filteredProducts"
-          @add-to-cart="handleAddToCart"/>
-    </div>
-  </div>
+  <ProductListTemplate
+      title="Side Dishes"
+      :products="displayedProducts"
+      :loading="loading"
+      :error="error"
+      :currentLanguage="currentLanguage"
+      @add-to-cart="addToCart"
+  />
 </template>
 
 <script>
-import { reactive } from 'vue';
-import SubCategoryComponent from "@/components/SubCategoryComponent.vue";
+import ProductListTemplate from "@/components/ProductListComponent.vue";
 import productService from '@/Service/ProductService';
-import ProductListComponent from "@/components/ProductListComponent.vue";
 
 export default {
   components: {
-    ProductListComponent,
-    SubCategoryComponent,
+    ProductListTemplate
+  },
+  props: {
+    currentLanguage: {
+      type: String,
+      default: "en"
+    }
+  },
+  data() {
+    return {
+      products: [],
+      loading: true,
+      error: null
+    };
+  },
+  computed: {
+    displayedProducts() {
+      return this.products.map(product => ({
+        ...product,
+        productName: this.currentLanguage === 'nl' ? product.productNameNL : product.productName
+      }));
+    }
+  },
+  mounted() {
+    this.fetchSideDishes();
   },
   methods: {
-    handleAddToCart(product) {
-      this.$emit("add-to-cart", product);
-    },
-  },
-  setup() {
-    const state = reactive({
-      loading: true,
-      error: null,
-      subcategories: [
-        { id: 8, name: "Cold Dishes", filteredProducts: [] },
-        { id: 9, name: "Hot Dishes", filteredProducts: [] },
-      ],
-    });
-
-    const fetchSideDishes = async () => {
-      state.loading = true;
+    async fetchSideDishes() {
       try {
-        for (const subcategory of state.subcategories) {
-          const response = await productService.getProductsBySubCategory(subcategory.id);
-          const allProducts = response.$values || response;
-
-          if (allProducts && Array.isArray(allProducts)) {
-            subcategory.filteredProducts = allProducts.map(product => ({
-              id: product.productId,
-              name: product.productName,
-              price: product.price,
-              imageUrl: product.productImage || 'default-image-path.jpg',
-            }));
-          } else {
-            state.error = `No products found for subcategory ${subcategory.name}`;
-          }
-        }
+        const allProducts = await productService.getAllProducts();
+        this.products = allProducts.filter(product => product.category === 3);
       } catch (err) {
-        state.error = `Failed to fetch products for subcategories`;
+        this.error = 'Fout bij het ophalen van de side dishes.';
+        console.error("Error fetching side dishes:", err);
       } finally {
-        state.loading = false;
+        this.loading = false;
       }
-    };
-
-    fetchSideDishes();
-
-    return {
-      ...state,
-      fetchSideDishes,
-    };
-  },
+    },
+    addToCart(product) {
+      const originalProduct = this.products.find(p => p.productId === product.productId);
+      this.$emit('add-to-cart', originalProduct);
+    }
+  }
 };
 </script>
 
 <style scoped>
-.title{
-  display: flex;             /* Maak de container een flexbox */
-  flex-wrap: wrap;           /* Laat items op meerdere lijnen staan */
-  justify-content: center;   /* Centreer de items horizontaal */
-  align-items: center;       /* Centreer de items verticaal */
-  padding: 10px;             /* Voeg ruimte toe aan de container */
-}
+
 </style>
