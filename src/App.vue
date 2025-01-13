@@ -92,9 +92,6 @@ export default {
     switchLanguage(language) {
       this.currentLanguage = language;
       localStorage.setItem("preferredLanguage", language);
-
-      // Force a page reload to apply the new language
-      window.location.reload();
     },
   },
 

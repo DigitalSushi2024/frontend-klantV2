@@ -27,7 +27,6 @@
   </div>
 </template>
 
-<!--//TODO: keep order when changing language-->
 <!--//TODO: send orders with original english product names-->
 <!--//TODO: error fix to send order to kitchen etc.-->
 <!--//TODO: error fix when item is deleted from order-->
