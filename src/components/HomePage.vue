@@ -1,19 +1,17 @@
-
-
 <template>
   <div v-if="!isOrderPage" class="black-container">
-    <CategoryComponents @category-selected="handleCategorySelection" />
-    <div v-if="selectedCategory === 'Sushi'">
-      <SushiComponent @add-to-cart="addToCart" />
+    <CategoryComponents @category-selected="handleCategorySelection" :currentLanguage="currentLanguage" />
+    <div v-if="selectedCategory === 'sushi'">
+      <SushiComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
     </div>
-    <div v-else-if="selectedCategory === 'Grill'">
-      <GrilledComponent @add-to-cart="addToCart" />
+    <div v-else-if="selectedCategory === 'grill'">
+      <GrilledComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
     </div>
-    <div v-else-if="selectedCategory === 'Side Dishes'">
-      <DishComponent @add-to-cart="addToCart" />
+    <div v-else-if="selectedCategory === 'sideDishes'">
+      <DishComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
     </div>
-    <div v-else-if="selectedCategory === 'Drinks'">
-      <DrinkComponent @add-to-cart="addToCart" />
+    <div v-else-if="selectedCategory === 'drinks'">
+      <DrinkComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
     </div>
   </div>
 </template>
@@ -24,6 +22,7 @@ import GrilledComponent from "@/components/GrilledComponent.vue";
 import CategoryComponents from "@/components/CategoryComponents.vue";
 import DrinkComponent from "@/components/DrinkComponent.vue";
 import SushiComponent from "@/components/SushiComponent.vue";
+
 export default {
   components: {
     CategoryComponents,
@@ -32,6 +31,12 @@ export default {
     GrilledComponent,
     DishComponent
   },
+  props: {
+    currentLanguage: {
+      type: String,
+      default: "en"
+    }
+  },
   data() {
     return {
       selectedCategory: null,
@@ -39,7 +44,7 @@ export default {
   },
   methods: {
     handleCategorySelection(category) {
-      this.selectedCategory = category;
+      this.selectedCategory = category; // Set the selected category key
     },
     addToCart(product) {
       this.$emit("add-to-cart", product);
@@ -49,7 +54,7 @@ export default {
 </script>
 
 <style scoped>
-.black-container{
+.black-container {
   background-color: #010101;
   width: 100%;
   height: 100%;
