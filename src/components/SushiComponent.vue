@@ -1,21 +1,21 @@
 <template>
-  <ProductListTemplate
+  <ProductListComponent
       title="Sushi"
       :products="displayedProducts"
       :loading="loading"
       :error="error"
       :currentLanguage="currentLanguage"
-      @add-to-cart="addToCart"
+      @add-to-cart="handleAddToCart"
   />
 </template>
 
 <script>
-import ProductListTemplate from "@/components/ProductListComponent.vue";
 import productService from '@/Service/ProductService';
+import ProductListComponent from "@/components/ProductListComponent.vue";
 
 export default {
   components: {
-    ProductListTemplate
+    ProductListComponent
   },
   props: {
     currentLanguage: {
@@ -53,10 +53,10 @@ export default {
         this.loading = false;
       }
     },
-    addToCart(product) {
-      const originalProduct = this.products.find(p => p.productId === product.productId);
-      this.$emit('add-to-cart', originalProduct);
-    }
+    handleAddToCart(product) {
+      console.log("Product sent to cart:", product);
+      this.$emit("add-to-cart", product);
+    },
   }
 };
 </script>

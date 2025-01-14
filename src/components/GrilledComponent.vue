@@ -5,7 +5,7 @@
       :loading="loading"
       :error="error"
       :currentLanguage="currentLanguage"
-      @add-to-cart="addToCart"
+      @add-to-cart="handleAddToCart"
   />
 </template>
 
@@ -52,6 +52,9 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    handleAddToCart(product) {
+      this.$emit("add-to-cart", product);
     },
     addToCart(product) {
       const originalProduct = this.products.find(p => p.productId === product.productId);

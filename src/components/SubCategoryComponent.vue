@@ -7,7 +7,7 @@
       :products="filteredProducts"
       :loading="loading"
       :error="error"
-      @add-to-cart="handleAddToCart"
+      @add-to-cart="$emit('add-to-cart', $event)"
     />
   </div>
 </template>
@@ -36,9 +36,6 @@ export default {
     };
   },
   methods: {
-    handleAddToCart(product) {
-      this.$emit('add-to-cart', product);
-    }
   },
 };
 </script>

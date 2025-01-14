@@ -30,7 +30,6 @@
         :cart-items="cartItems"
         :current-language="currentLanguage"
         @add-to-cart="addToCart"
-        @remove-from-cart="removeFromCart"
         @language-changed="switchLanguage"
     />
   </div>
@@ -62,10 +61,11 @@ export default {
   },
   methods: {
     addToCart(product) {
+      console.trace("addToCart called in App.vue, product:", product);
       console.log("Product received in App.vue:", product);
 
       const existingItem = this.cartItems.find(
-          (item) => item.id === product.id
+          (item) => item.productId === product.productId
       );
 
       if (existingItem) {

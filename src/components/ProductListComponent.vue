@@ -8,7 +8,9 @@
         <img :src="`${product.productImage}`" :alt="product.productName" class="product-image" />
         <h3>{{ product.productName }}</h3>
         <p>€{{ product.price.toFixed(2) }}</p>
-        <button class="add-to-cart-btn" @click="addToCart(product)">{{ translations[currentLanguage].addToCart }}</button>
+        <button class="add-to-cart-btn" @click="addToCart(product)">
+          {{ translations[currentLanguage].addToCart }}
+        </button>
       </div>
     </div>
   </div>

@@ -2,16 +2,16 @@
   <div v-if="!isOrderPage" class="black-container">
     <CategoryComponents @category-selected="handleCategorySelection" :currentLanguage="currentLanguage" />
     <div v-if="selectedCategory === 'sushi'">
-      <SushiComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
+      <SushiComponent @add-to-cart="$emit('add-to-cart', $event)"  :currentLanguage="currentLanguage" />
     </div>
     <div v-else-if="selectedCategory === 'grill'">
-      <GrilledComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
+      <GrilledComponent @add-to-cart="$emit('add-to-cart', $event)"  :currentLanguage="currentLanguage" />
     </div>
     <div v-else-if="selectedCategory === 'sideDishes'">
-      <DishComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
+      <DishComponent @add-to-cart="$emit('add-to-cart', $event)"  :currentLanguage="currentLanguage" />
     </div>
     <div v-else-if="selectedCategory === 'drinks'">
-      <DrinkComponent @add-to-cart="addToCart" :currentLanguage="currentLanguage" />
+      <DrinkComponent @add-to-cart="$emit('add-to-cart', $event)"  :currentLanguage="currentLanguage" />
     </div>
   </div>
 </template>
@@ -61,5 +61,31 @@ export default {
   margin-top: 0.8em;
   z-index: 2;
   border-radius: 35px 35px 0px 0px;
+}
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4caf50; /* Groene achtergrondkleur */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fade-in-out 2s ease-in-out; /* Vloeiend fade-in-out effect */
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 </style>
