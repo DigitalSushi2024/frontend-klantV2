@@ -1,6 +1,8 @@
 <template>
-  <div v-if="notification.message" :class="['notification', notification.type]">
-    {{ notification.message }}
+  <div v-if="notification.visible" :class="['notification', notification.type]">
+    {{ notification.type === 'success'
+      ? translations[currentLanguage].successMessage
+      : translations[currentLanguage].errorMessage }}
   </div>
   <div class="order-page">
     <!-- Header met de terugknop -->
@@ -70,7 +72,10 @@ export default {
           removeButton: "Remove",
           total: "Total",
           checkoutButton: "Proceed to Checkout",
-          emptyNotification: "Your cart is empty. Please choose a product to continue!"
+          emptyNotification: "Your cart is empty. Please choose a product to continue!",
+          successMessage: "Order placed successfully!",
+          errorMessage: "Order failed.",
+
         },
         nl: {
           backButton: "← Terug",
@@ -80,12 +85,14 @@ export default {
           removeButton: "Verwijderen",
           total: "Totaal",
           checkoutButton: "Ga naar Afrekenen",
-          emptyNotification: "Uw winkelwagen is leeg. Kies een product om verder te gaan!"
+          emptyNotification: "Uw winkelwagen is leeg. Kies een product om verder te gaan!",
+          successMessage: "Order succesvol geplaats",
+          errorMessage: "Order niet kunnen plaatsen",
         },
       },
       notification: {
-        message: "",
-        type: "",
+        type: "", // success or error
+        visible: false,
       },
     };
   },
@@ -132,12 +139,19 @@ export default {
 
     },
     showNotification(message, type) {
-      this.notification.message = message;
       this.notification.type = type;
+      this.notification.visible = true;
+      if (type === "success") {
+        this.translations[this.currentLanguage].successMessage = message;
+      } else {
+        this.translations[this.currentLanguage].errorMessage = message;
+      }
 
+      // Verberg notificatie na 3 seconden
       setTimeout(() => {
-        this.notification.message = "";
-        this.notification.type = "";
+        this.notification.visible = false;
+        this.translations[this.currentLanguage].successMessage = "";
+        this.translations[this.currentLanguage].errorMessage = "";
       }, 3000);
     },
 
@@ -150,14 +164,14 @@ export default {
           status: "Pending",
         }));
         await orderService.checkout(1,orderItemsDto);
-        this.showNotification("Order placed successfully!", "success");
+        this.showNotification(this.translations[this.currentLanguage].successMessage, "success");
         setTimeout(() => {
           this.cartItems.splice(0, this.cartItems.length);
           this.goBack();
         }, 2000);
       } catch (error) {
         const errorMessage =
-            (error.response && error.response.data.title) || "Failed to place order";
+            (error.response && error.response.data.title) || this.translations[this.currentLanguage].errorMessage;
         this.showNotification(`${errorMessage}`, "error");
         console.log("Backend errors:", error.response.data.errors);
       }
@@ -171,32 +185,33 @@ export default {
 
 <style scoped>
 /* Algemene container */
-.order-page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+body {
   font-family: Arial, sans-serif;
-  background-color: #121212;
-  color: white;
-  border-radius: 10px;
+  background-color: #1c1c1c;
+  color: #fff;
+  margin: 0;
+  padding: 0;
 }
 
-/* Header met titel en back-knop */
+/* Header */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #292929;
+  border-bottom: 1px solid #444;
 }
 
 .back-button {
   background-color: #e74c3c;
-  color: white;
+  color: #fff;
   border: none;
-  padding: 10px 15px;
-  font-size: 1em;
   border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
   cursor: pointer;
+  margin-left: 65px;
 }
 
 .back-button:hover {
@@ -204,56 +219,86 @@ export default {
 }
 
 h1 {
-  font-size: 1.8em;
-  text-align: center;
+  font-size: 24px;
   margin: 0;
 }
 
-/* Lijst met bestellingen */
+.empty-message {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.empty-message h2 {
+  font-size: 18px;
+  color: #aaa;
+}
+
+/* Winkelwagen items */
 .order-items {
-  margin: 20px 0;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  padding: 10px 0;
+  margin: 20px auto;
+  max-width: 800px;
 }
 
 .order-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #444;
+  background-color: #292929;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #444;
 }
 
 .item-image {
   width: 80px;
   height: 80px;
-  object-fit: cover;
   border-radius: 5px;
+  margin-right: 20px;
 }
 
 .item-details {
-  flex-grow: 1;
-  padding-left: 20px;
+  flex: 1;
 }
 
 .item-details h3 {
-  margin: 0;
-  font-size: 1.2em;
-  color: #fff;
+  font-size: 18px;
+  margin: 0 0 10px;
 }
 
 .item-details p {
+  font-size: 14px;
   margin: 5px 0;
-  color: #bbb;
+}
+
+/* Controleknoppen */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  gap: 15px;
+}
+
+.quantity-button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.quantity-button:hover {
+  background-color: #2980b9;
 }
 
 .remove-button {
   background-color: #e74c3c;
-  color: white;
+  color: #fff;
   border: none;
+  border-radius: 5px;
   padding: 5px 10px;
-  border-radius: 3px;
+  font-size: 14px;
   cursor: pointer;
 }
 
@@ -261,30 +306,66 @@ h1 {
   background-color: #c0392b;
 }
 
-/* Samenvatting van de bestelling */
+/* Totaalprijs en Checkout */
 .order-summary {
-  margin-top: 20px;
-  padding-top: 10px;
-  border-top: 1px solid #444;
   text-align: center;
+  margin-top: 20px;
 }
 
-h2 {
-  font-size: 1.5em;
-  margin-bottom: 20px;
+.order-summary h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .checkout-button {
-  background-color: #27ae60;
-  color: white;
+  background-color: #4caf50;
+  color: #fff;
   border: none;
-  padding: 10px 20px;
-  font-size: 1.1em;
   border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
   cursor: pointer;
 }
 
 .checkout-button:hover {
-  background-color: #219150;
+  background-color: #388e3c;
+}
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #fff;
+  z-index: 1000;
+  animation: fade-in-out 3s ease-in-out;
+}
+
+.notification.success {
+  background-color: #4caf50; /* Groen */
+}
+
+.notification.error {
+  background-color: #f44336; /* Rood */
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }
 </style>

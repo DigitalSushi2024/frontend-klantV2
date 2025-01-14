@@ -62,7 +62,8 @@ export default {
 /* Keep the styles for HeaderComponent */
 .app-header {
   background-color: #E74C3C;
-  position: relative;
+  position: sticky;
+  top: 0;
   text-align: center;
   color: white;
   height: 6em;
@@ -113,10 +114,13 @@ export default {
   margin-top: 2em;
 }
 
+
+
 .header-image {
   width: 100%;
   height: auto;
   position: relative;
+  margin-top: -4em; /* Vermindert ruimte veroorzaakt door de sticky header */
 }
 
 .restaurantName {

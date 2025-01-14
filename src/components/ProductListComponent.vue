@@ -1,5 +1,8 @@
 <template>
   <div class="product-list">
+    <div v-if="notification.visible" :class="['notification', notification.type]">
+      {{ notification.message }}
+    </div>
     <h2>{{ title }}</h2>
     <div v-if="loading">Loading...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
@@ -8,7 +11,7 @@
         <img :src="`${product.productImage}`" :alt="product.productName" class="product-image" />
         <h3>{{ product.productName }}</h3>
         <p>€{{ product.price.toFixed(2) }}</p>
-        <button class="add-to-cart-btn" @click="addToCart(product)">
+        <button class="add-to-cart-btn" @click="addToCart(product)" >
           {{ translations[currentLanguage].adder }}
         </button>
       </div>
@@ -56,12 +59,19 @@ export default {
     return {
       translations: {
         en: {
-          adder: "Add to Cart"
+          adder: "Add to Cart",
+          itemAdded: " Added to Cart"
         },
         nl: {
-          adder: "Voeg toe aan winkelwagen"
+          adder: "Voeg toe aan winkelwagen",
+          itemAdded: " Toegevoegd aan Winkelwagen"
         }
-      }
+      },
+      notification: {
+        visible: false,
+        message: "",
+        type: "success" // success of error
+      },
     };
   },
   emits: ['add-to-cart'],
@@ -69,6 +79,14 @@ export default {
     addToCart(product) {
       console.log("product list", product);
       this.$emit('add-to-cart', product);
+      this.notification.message = `${product.productName}` + this.translations[this.currentLanguage].itemAdded;
+      this.notification.type = "success"; // Of 'error' als nodig
+      this.notification.visible = true;
+
+      // Verberg de notificatie na 3 seconden
+      setTimeout(() => {
+        this.notification.visible = false;
+      }, 3000);
     }
   }
 };
@@ -120,5 +138,45 @@ export default {
 
 .error {
   color: red;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  z-index: 1000;
+  color: #fff;
+  animation: fade-in-out 3s ease-in-out;
+}
+
+.notification.success {
+  background-color: #4caf50; /* Groen */
+}
+
+.notification.error {
+  background-color: #f44336; /* Rood */
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }
 </style>
