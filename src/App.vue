@@ -23,7 +23,6 @@
         :current-language="currentLanguage"
         @navigate-to-order="goToOrderPage"
     />
-    <order-header v-else :current-language="currentLanguage" />
 
     <!-- Dynamically rendered content based on route -->
     <router-view
@@ -37,14 +36,12 @@
 
 <script>
 import HeaderComponent from "@/components/headerComponents.vue";
-import OrderHeader from "@/components/OrderHeader.vue";
 import netherlandsIcon from "@/assets/images/netherlands.png";
 import englishIcon from "@/assets/images/english.png";
 
 export default {
   components: {
     HeaderComponent,
-    OrderHeader,
   },
   data() {
     return {
@@ -61,22 +58,18 @@ export default {
   },
   methods: {
     addToCart(product) {
-      console.trace("addToCart called in App.vue, product:", product);
-      console.log("Product received in App.vue:", product);
-
       const existingItem = this.cartItems.find(
           (item) => item.productId === product.productId
       );
+      console.trace("addToCart called in App.vue, product:", product);
+      console.log("Product received in App.vue:", product);
 
       if (existingItem) {
         existingItem.quantity++;
       } else {
         this.cartItems.push({ ...product, quantity: 1 });
       }
-
-      // Forceer Vue-reactiviteit
       this.cartItems = [...this.cartItems];
-      console.log("Updated cartItems in App.vue:", this.cartItems);
     },
 
     goToOrderPage() {

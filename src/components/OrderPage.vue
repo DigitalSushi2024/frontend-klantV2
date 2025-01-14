@@ -45,6 +45,8 @@
 <!--//TODO: error fix when item is deleted from order-->
 
 <script>
+import orderService from "@/Service/OrderService.js";
+
 export default {
   name: "OrderPage",
   props: {
@@ -141,9 +143,8 @@ export default {
 
     async checkout() {
       try {
-        // Maak een lijst van OrderItemsDTO
         const orderItemsDto = this.cartItems.map(item => ({
-          productId: item.id,
+          productId: item.productId,
           quantity: item.quantity,
           unitPrice: item.price,
           status: "Pending",
@@ -160,9 +161,6 @@ export default {
         this.showNotification(`${errorMessage}`, "error");
         console.log("Backend errors:", error.response.data.errors);
       }
-    },
-    removeFromOrder(productId) {
-      this.$emit("remove-from-cart", productId); // Emit event to remove item from cart
     },
     goBack() {
       this.$router.go(-1); // Navigate back to the previous page

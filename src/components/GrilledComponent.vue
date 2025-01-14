@@ -41,6 +41,7 @@ export default {
   mounted() {
     this.fetchGrilledItems();
   },
+  emits: ['add-to-cart'],
   methods: {
     async fetchGrilledItems() {
       try {
@@ -56,10 +57,6 @@ export default {
     handleAddToCart(product) {
       this.$emit("add-to-cart", product);
     },
-    addToCart(product) {
-      const originalProduct = this.products.find(p => p.productId === product.productId);
-      this.$emit('add-to-cart', originalProduct);
-    }
   }
 };
 </script>

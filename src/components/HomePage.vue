@@ -42,12 +42,10 @@ export default {
       selectedCategory: null,
     };
   },
+  emits: ['add-to-cart'],
   methods: {
     handleCategorySelection(category) {
       this.selectedCategory = category; // Set the selected category key
-    },
-    addToCart(product) {
-      this.$emit("add-to-cart", product);
     },
   },
 };

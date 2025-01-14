@@ -9,7 +9,7 @@
         <h3>{{ product.productName }}</h3>
         <p>€{{ product.price.toFixed(2) }}</p>
         <button class="add-to-cart-btn" @click="addToCart(product)">
-          {{ translations[currentLanguage].addToCart }}
+          {{ translations[currentLanguage].adder }}
         </button>
       </div>
     </div>
@@ -56,16 +56,18 @@ export default {
     return {
       translations: {
         en: {
-          addToCart: "Add to Cart"
+          adder: "Add to Cart"
         },
         nl: {
-          addToCart: "Voeg toe aan winkelwagen"
+          adder: "Voeg toe aan winkelwagen"
         }
       }
     };
   },
+  emits: ['add-to-cart'],
   methods: {
     addToCart(product) {
+      console.log("product list", product);
       this.$emit('add-to-cart', product);
     }
   }

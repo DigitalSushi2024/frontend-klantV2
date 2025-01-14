@@ -68,7 +68,6 @@ export default {
   },
   watch: {
     currentLanguage(newLanguage) {
-      // When language changes, the UI will automatically re-render due to Vue's reactivity
     }
   }
 };
