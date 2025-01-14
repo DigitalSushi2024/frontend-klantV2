@@ -18,12 +18,26 @@
 
     <!-- Winkelwagen items -->
     <div v-else class="order-items">
-      <div v-for="item in cartItems" :key="item.productId" class="order-item">
+<!--      <div v-for="item in cartItems" :key="item.productId" class="order-item">
         <img :src="item.productImage" :alt="item.productName" class="item-image" />
         <div class="item-details">
           <h3>{{ item.productName }}</h3>
           <p>{{ translations[currentLanguage].quantity }}: {{ item.quantity }}</p>
           <p>{{ translations[currentLanguage].productName }}: €{{ (item.price * item.quantity).toFixed(2) }}</p>
+          <div class="quantity-controls">
+            <button class="quantity-button" @click="decreaseQuantity(item.productId)">−</button>
+            <span class="quantity">{{ item.quantity }}</span>
+            <button class="quantity-button" @click="increaseQuantity(item.productId)">+</button>
+            <button class="remove-button" @click="removeFromCart(item.productId)">{{ translations[currentLanguage].removeButton }}</button>
+          </div>
+        </div>
+      </div>-->
+      <div v-for="item in localizedCartItems" :key="item.productId" class="order-item">
+        <img :src="item.productImage" :alt="item.productName" class="item-image" />
+        <div class="item-details">
+          <h3>{{ item.productName }}</h3>
+          <p>{{ translations[currentLanguage].quantity }}: {{ item.quantity }}</p>
+          <p>{{ translations[currentLanguage].price }}: €{{ (item.price * item.quantity).toFixed(2) }}</p>
           <div class="quantity-controls">
             <button class="quantity-button" @click="decreaseQuantity(item.productId)">−</button>
             <span class="quantity">{{ item.quantity }}</span>
@@ -102,6 +116,15 @@ export default {
           (total, item) => total + item.price * item.quantity,
           0
       );
+    },
+    localizedCartItems() {
+      return this.cartItems.map(item => ({
+        ...item,
+        productName:
+            this.currentLanguage === "nl"
+                ? item.productName_nl || item.productName
+                : item.productName
+      }));
     },
   },
   methods: {

@@ -7,7 +7,7 @@
     <div v-if="loading">Loading...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else>
-      <div v-for="product in products" :key="product.productId" class="product-item">
+      <div v-for="product in localizedProducts" :key="product.productId" class="product-item">
         <img :src="`${product.productImage}`" :alt="product.productName" class="product-image" />
         <h3>{{ product.productName }}</h3>
         <p>€{{ product.price.toFixed(2) }}</p>
@@ -73,6 +73,17 @@ export default {
         type: "success" // success of error
       },
     };
+  },
+  computed: {
+    localizedProducts() {
+      return this.products.map(product => ({
+        ...product,
+        productName:
+            this.currentLanguage === "nl"
+                ? product.productName_nl || product.productName
+                : product.productName
+      }));
+    }
   },
   emits: ['add-to-cart'],
   methods: {
